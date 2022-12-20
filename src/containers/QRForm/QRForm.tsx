@@ -47,7 +47,7 @@ const QRForm = ({ setResponse, setFinished }: QRFormProps) => {
                 <Card.ContentTitle>Введите данные:</Card.ContentTitle>
                 <Groups alignItems={"flex-start"}>
                     <Groups design={'vertical'}>
-                        <Input placeholder='Аккаунт' value={account} onChange={(e) =>
+                        <Input placeholder='Счёт' value={account} onChange={(e) =>
                             setAccount((e.target as HTMLTextAreaElement).value)}/>
                         <Input placeholder='URL переадресации' value={redirectUrl} onChange={(e) =>
                             setRedirectUrl((e.target as HTMLTextAreaElement).value)}/>
