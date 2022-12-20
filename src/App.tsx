@@ -22,7 +22,7 @@ const App = () => {
             <div className={classNames("main")}>
                 {!finished?
                     <QRForm setResponse={setResponse} setFinished={setFinished} />:
-                    <QRView responseData={response}/>
+                    <QRView responseData={response} setFinished={setFinished} />
                 }
             </div>
         </>
