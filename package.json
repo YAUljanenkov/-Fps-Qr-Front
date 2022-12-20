@@ -25,6 +25,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+  "proxy": "http://127.0.0.1:8080/",
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -37,7 +38,6 @@
       "not dead",
       "not op_mini all"
     ],
-    "proxy": ["http://127.0.0.1:8080"],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",

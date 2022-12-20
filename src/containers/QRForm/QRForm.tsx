@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import styles from './QRForm.module.css';
 import classNames from "classnames";
 import {Card, Groups, Input, Button} from 'vienna-ui';
-import {ResponseData} from "../App";
-import raif_qr from "../static/raif_qr.jpg"
+import {ResponseData} from "../../App";
+import raif_qr from "../../static/raif_qr.jpg"
 
 interface RequestData {
     account: string,
@@ -28,7 +28,7 @@ const QRForm = ({ setResponse, setFinished }: QRFormProps) => {
             return;
         }
 
-        const response = await fetch("http://127.0.0.1:8080/create", {
+        const response = await fetch("/create", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'

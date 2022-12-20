@@ -2,7 +2,8 @@ import React, {useState} from 'react';
 import classNames from "classnames";
 import './App.css';
 import { Header } from 'vienna-ui';
-import QRForm from "./containers/QRForm";
+import QRForm from "./containers/QRForm/QRForm";
+import QRView from "./containers/QRView/QRView";
 
 export interface ResponseData {
     qrId: string,
@@ -21,7 +22,7 @@ const App = () => {
             <div className={classNames("main")}>
                 {!finished?
                     <QRForm setResponse={setResponse} setFinished={setFinished} />:
-                    <></>
+                    <QRView responseData={response}/>
                 }
             </div>
         </>
