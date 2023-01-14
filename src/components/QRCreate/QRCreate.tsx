@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styles from './QRForm.module.css';
+import styles from './QRCreate.module.css';
 import classNames from "classnames";
 import {Card, Groups, Input, Button} from 'vienna-ui';
 import {ResponseData} from "../../App";
@@ -11,12 +11,12 @@ interface RequestData {
     sbpMerchantId: string
 }
 
-interface QRFormProps {
+interface QRCreateProps {
     setResponse: (arg: ResponseData) => void
-    setFinished: (arg: boolean) => void
+    setStep: (arg: number) => void
 }
 
-const QRForm = ({ setResponse, setFinished }: QRFormProps) => {
+const QRCreate: React.FunctionComponent<QRCreateProps> = ({ setResponse, setStep }: QRCreateProps) => {
     const [account, setAccount] = useState<string>();
     const [redirectUrl, setRedirectUrl] = useState<string>();
     const [sbpMerchantId, setSbpMerchantId] = useState<string>();
@@ -38,7 +38,7 @@ const QRForm = ({ setResponse, setFinished }: QRFormProps) => {
 
         const result: ResponseData = await response.json();
         setResponse(result);
-        setFinished(true);
+        setStep(1);
     }
 
     return (
@@ -67,4 +67,4 @@ const QRForm = ({ setResponse, setFinished }: QRFormProps) => {
     )
 }
 
-export default QRForm;
+export default QRCreate;

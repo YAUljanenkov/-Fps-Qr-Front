@@ -7,10 +7,10 @@ import {token} from "../../private";
 
 interface QRViewProps {
     responseData: ResponseData | undefined
-    setFinished: (arg: boolean) => void
+    setStep: (arg: number) => void
 }
 
-const QRView = ({responseData, setFinished} : QRViewProps) => {
+const QRView: React.FunctionComponent<QRViewProps> = ({responseData, setStep} : QRViewProps) => {
     useEffect( () => {
         (async () => {
             await fetch("/order/refresh", {
@@ -34,7 +34,7 @@ const QRView = ({responseData, setFinished} : QRViewProps) => {
         <Card title={"QR код"} className={styles.card}>
             <Groups design={'vertical'}>
                 <img className={styles.qrBorder} src={responseData && responseData.qrUrl} alt="QR"/>
-                <Button design={'outline'} onClick={()=> setFinished(false)}>
+                <Button design={'outline'} onClick={()=> setStep(0)}>
                     Создать новый
                 </Button>
             </Groups>

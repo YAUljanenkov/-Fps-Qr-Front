@@ -2,8 +2,9 @@ import React, {useState} from 'react';
 import classNames from "classnames";
 import './App.css';
 import { Header } from 'vienna-ui';
-import QRForm from "./containers/QRForm/QRForm";
-import QRView from "./containers/QRView/QRView";
+import QRCreate from "./components/QRCreate/QRCreate";
+import QRView from "./components/QRView/QRView";
+import QRSelect from "./components/QRSelect/QRSelect";
 
 export interface ResponseData {
     qrId: string,
@@ -14,16 +15,24 @@ export interface ResponseData {
 
 const App = () => {
     const [response, setResponse] = useState<ResponseData>();
-    const [finished, setFinished] = useState(false);
+    const [step, setStep] = useState(2);
+
+    const getCurrentStep = (step: number) => {
+        switch (step) {
+            case 1:
+                return <QRCreate setResponse={setResponse} setStep={setStep} />;
+            case 2:
+                return <QRSelect/>
+            case 3:
+                return <QRView responseData={response} setStep={setStep} />;
+        }
+    }
 
     return (
         <>
             <Header size={'l'} />
             <div className={classNames("main")}>
-                {!finished?
-                    <QRForm setResponse={setResponse} setFinished={setFinished} />:
-                    <QRView responseData={response} setFinished={setFinished} />
-                }
+                {getCurrentStep(step)}
             </div>
         </>
     );
