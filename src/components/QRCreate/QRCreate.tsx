@@ -1,15 +1,8 @@
 import React, { useState } from 'react';
 import styles from './QRCreate.module.css';
-import classNames from "classnames";
 import {Card, Groups, Input, Button} from 'vienna-ui';
 import {ResponseData} from "../../App/App";
 import raif_qr from "../../static/raif_qr.jpg"
-
-interface RequestData {
-    account: string,
-    redirectUrl: string,
-    sbpMerchantId: string
-}
 
 interface QRCreateProps {
     setResponse: (arg: ResponseData) => void
@@ -17,7 +10,7 @@ interface QRCreateProps {
 }
 
 const QRCreate: React.FunctionComponent<QRCreateProps> = ({ setResponse, setStep }: QRCreateProps) => {
-    const [account, setAccount] = useState<string>();
+    const [account, setAccount] = useState<string>("");
     const [redirectUrl, setRedirectUrl] = useState<string>();
     const [sbpMerchantId, setSbpMerchantId] = useState<string>();
     const [isInvalid, setIsInvalid] = useState<boolean>(false);
@@ -55,7 +48,7 @@ const QRCreate: React.FunctionComponent<QRCreateProps> = ({ setResponse, setStep
                         setSbpMerchantId(value);
                         setIsInvalid(value === "")
                     }} />
-                    <Button design='accent' onClick={sendRequest}>
+                    <Button design='accent' onClick={sendRequest} disabled={account === ""}>
                         Создать
                     </Button>
                 </Groups>

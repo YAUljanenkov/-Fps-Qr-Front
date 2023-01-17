@@ -4,12 +4,18 @@
     justify-content: center;
     position: absolute;
     left: 0;
-    top: 0;
+    top: 60px;
     width: 100vw;
-    height: 100vh;
+    height: calc(100vh - 60px);
 }
 
 .card {
-    width: 450px !important;
+    display: flex;
+    width: 500px !important;
     align-items: center;
+}
+
+.ButtonLeft {
+    position: absolute;
+    left: -30px;
 }

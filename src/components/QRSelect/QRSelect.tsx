@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {Card, Groups, Input, Button} from 'vienna-ui';
-import styles from './QRSelect.module.css';
-import {QrScanner} from '@yudiel/react-qr-scanner'
+import {QrScanner} from '@yudiel/react-qr-scanner';
 
 interface QRSelectProps {
 }
@@ -10,11 +9,26 @@ const QRSelect: React.FunctionComponent<QRSelectProps> = () => {
     const [isInvalid, setIsInvalid] = useState<boolean>(false);
     const [qrId, setQrId] = useState("");
 
+    const getQrIdFromLink = (link: string): string | null => {
+        // https://qr.nspk.ru/AS7F6AD20F204B30A0D0C8D3996D298D?type=01&bank=10000001&cur=RUB&crc=C08B
+        if (link.includes("https://qr.nspk.ru/") && link.indexOf("https://qr.nspk.ru/") === 0) {
+            return link.substring(19, 51);
+        }
+        return null;
+    }
+
     return (
         <>
             <Card.ContentTitle>Отсканируйте QR код с помощью камеры</Card.ContentTitle>
             <QrScanner
-                onDecode={(result) => setQrId(result)}
+                onDecode={(result) => {
+                    const value = getQrIdFromLink(result);
+                    console.log(value);
+                    if (value && value !== "") {
+                        setQrId(value);
+                    }
+                }
+            }
                 onError={(error) => console.log(error?.message)}
             />
             <Card.ContentTitle>Или введите ID QR кода вручную:</Card.ContentTitle>
@@ -24,7 +38,7 @@ const QRSelect: React.FunctionComponent<QRSelectProps> = () => {
                     setQrId(value);
                     setIsInvalid(value === "")
                 }} />
-                <Button>Сохранить</Button>
+                <Button disabled={qrId === ""}>Сохранить</Button>
             </Groups>
         </>
     )
