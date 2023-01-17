@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Card, Groups, Button} from 'vienna-ui';
-import {ResponseData} from "../../App";
+import {ResponseData} from "../../App/App";
 import styles from './QRView.module.css';
 import {token} from "../../private";
 
@@ -31,14 +31,12 @@ const QRView: React.FunctionComponent<QRViewProps> = ({responseData, setStep} : 
 
     return (
       <>
-        <Card title={"QR код"} className={styles.card}>
-            <Groups design={'vertical'}>
-                <img className={styles.qrBorder} src={responseData && responseData.qrUrl} alt="QR"/>
-                <Button design={'outline'} onClick={()=> setStep(0)}>
-                    Создать новый
-                </Button>
-            </Groups>
-        </Card>
+        <Groups design={'vertical'}>
+            <img className={styles.qrBorder} src={responseData && responseData.qrUrl} alt="QR"/>
+            <Button design={'outline'} onClick={()=> setStep(0)}>
+                Создать новый
+            </Button>
+        </Groups>
       </>
     )
 }

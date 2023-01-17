@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import classNames from "classnames";
-import './App.css';
-import { Header } from 'vienna-ui';
-import QRCreate from "./components/QRCreate/QRCreate";
-import QRView from "./components/QRView/QRView";
-import QRSelect from "./components/QRSelect/QRSelect";
+import styles from './App.module.css';
+import { Header, Card } from 'vienna-ui';
+import QRCreate from "../components/QRCreate/QRCreate";
+import QRView from "../components/QRView/QRView";
+import QRSelect from "../components/QRSelect/QRSelect";
 
 export interface ResponseData {
     qrId: string,
@@ -16,6 +16,7 @@ export interface ResponseData {
 const App = () => {
     const [response, setResponse] = useState<ResponseData>();
     const [step, setStep] = useState(2);
+    const headerNames = ["Создание QR кода", "Выбор существующего QR кода", "QR код"]
 
     const getCurrentStep = (step: number) => {
         switch (step) {
@@ -30,9 +31,11 @@ const App = () => {
 
     return (
         <>
-            <Header size={'l'} />
-            <div className={classNames("main")}>
-                {getCurrentStep(step)}
+            <Header size={'s'} />
+            <div className={classNames(styles.main)}>
+                <Card title={headerNames[step]} className={classNames(styles.card)}>
+                    {getCurrentStep(step)}
+                </Card>
             </div>
         </>
     );

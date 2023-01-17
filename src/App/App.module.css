@@ -8,3 +8,8 @@
     width: 100vw;
     height: 100vh;
 }
+
+.card {
+    width: 450px !important;
+    align-items: center;
+}

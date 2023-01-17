@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from './QRCreate.module.css';
 import classNames from "classnames";
 import {Card, Groups, Input, Button} from 'vienna-ui';
-import {ResponseData} from "../../App";
+import {ResponseData} from "../../App/App";
 import raif_qr from "../../static/raif_qr.jpg"
 
 interface RequestData {
@@ -43,26 +43,24 @@ const QRCreate: React.FunctionComponent<QRCreateProps> = ({ setResponse, setStep
 
     return (
         <>
-            <Card title={'Создание QR кода'} className={classNames(styles.card)}>
-                <Card.ContentTitle>Введите данные:</Card.ContentTitle>
-                <Groups alignItems={"flex-start"}>
-                    <Groups design={'vertical'}>
-                        <Input placeholder='Счёт' value={account} onChange={(e) =>
-                            setAccount((e.target as HTMLTextAreaElement).value)}/>
-                        <Input placeholder='URL переадресации' value={redirectUrl} onChange={(e) =>
-                            setRedirectUrl((e.target as HTMLTextAreaElement).value)}/>
-                        <Input invalid={isInvalid} placeholder='Merchant ID' value={sbpMerchantId} onChange={(e) => {
-                            const value = (e.target as HTMLTextAreaElement).value;
-                            setSbpMerchantId(value);
-                            setIsInvalid(value === "")
-                        }} />
-                        <Button design='accent' onClick={sendRequest}>
-                            Создать
-                        </Button>
-                    </Groups>
-                    <img src={raif_qr} className={styles.qrImage} alt="Raif qr"/>
+            <Card.ContentTitle>Введите данные:</Card.ContentTitle>
+            <Groups alignItems={"flex-start"}>
+                <Groups design={'vertical'}>
+                    <Input placeholder='Счёт' value={account} onChange={(e) =>
+                        setAccount((e.target as HTMLTextAreaElement).value)}/>
+                    <Input placeholder='URL переадресации' value={redirectUrl} onChange={(e) =>
+                        setRedirectUrl((e.target as HTMLTextAreaElement).value)}/>
+                    <Input invalid={isInvalid} placeholder='Merchant ID' value={sbpMerchantId} onChange={(e) => {
+                        const value = (e.target as HTMLTextAreaElement).value;
+                        setSbpMerchantId(value);
+                        setIsInvalid(value === "")
+                    }} />
+                    <Button design='accent' onClick={sendRequest}>
+                        Создать
+                    </Button>
                 </Groups>
-            </Card>
+                <img src={raif_qr} className={styles.qrImage} alt="Raif qr"/>
+            </Groups>
         </>
     )
 }
