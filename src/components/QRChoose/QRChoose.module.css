@@ -1,0 +1,26 @@
+.buttonIcon {
+    width: 100px;
+    height: 100px;
+}
+
+.iconWrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.buttonView {
+    width: 200px;
+    border: 1px dashed lightgray;
+    justify-content: center;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+.buttonView:hover {
+    border: 1px solid #fdec4f;
+    box-shadow: 0 0 10px #fdec4f;
+}

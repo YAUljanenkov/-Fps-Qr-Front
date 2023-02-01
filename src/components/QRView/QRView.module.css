@@ -1,8 +1,3 @@
-.card {
-    width: 450px !important;
-    align-items: center;
-}
-
 .qrBorder {
     border-radius: 10%;
     border: 2px solid lightgray;
