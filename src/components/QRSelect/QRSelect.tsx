@@ -1,11 +1,15 @@
 import React, {useState} from 'react';
 import {Card, Groups, Input, Button} from 'vienna-ui';
 import {QrScanner} from '@yudiel/react-qr-scanner';
+import {token} from "../../private";
+import {ResponseData} from "../../App/App";
 
 interface QRSelectProps {
+    setResponse: (arg: ResponseData) => void
+    setStep: (arg: number) => void
 }
 
-const QRSelect: React.FunctionComponent<QRSelectProps> = () => {
+const QRSelect: React.FunctionComponent<QRSelectProps> = ({setResponse, setStep}: QRSelectProps) => {
     const [isInvalid, setIsInvalid] = useState<boolean>(false);
     const [qrId, setQrId] = useState("");
 
@@ -15,6 +19,21 @@ const QRSelect: React.FunctionComponent<QRSelectProps> = () => {
             return link.substring(19, 51);
         }
         return null;
+    }
+
+    const getQrDataFromId = async () => {
+        const response = await fetch(`/qr/status/${qrId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                'Authorization': token
+            }
+        });
+
+        const result: ResponseData = await response.json();
+        setResponse(result);
+        console.log(result);
+        setStep(3);
     }
 
     return (
@@ -38,7 +57,7 @@ const QRSelect: React.FunctionComponent<QRSelectProps> = () => {
                     setQrId(value);
                     setIsInvalid(value === "")
                 }} />
-                <Button disabled={qrId === ""}>Сохранить</Button>
+                <Button disabled={qrId === ""} onClick={getQrDataFromId}>Сохранить</Button>
             </Groups>
         </>
     )

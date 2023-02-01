@@ -13,6 +13,7 @@ export interface ResponseData {
     qrStatus: string,
     payload: string,
     qrUrl: string
+    qrExpirationDate: string | null
 }
 
 const App = () => {
@@ -29,7 +30,7 @@ const App = () => {
             case 1:
                 return <QRCreate setResponse={setResponse} setStep={setStep} />;
             case 2:
-                return <QRSelect />
+                return <QRSelect setResponse={setResponse} setStep={setStep} />
             case 3:
                 return <QRView responseData={response} setStep={setStep} />;
         }

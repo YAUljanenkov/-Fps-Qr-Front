@@ -11,8 +11,8 @@ interface QRCreateProps {
 
 const QRCreate: React.FunctionComponent<QRCreateProps> = ({ setResponse, setStep }: QRCreateProps) => {
     const [account, setAccount] = useState<string>("");
-    const [redirectUrl, setRedirectUrl] = useState<string>();
-    const [sbpMerchantId, setSbpMerchantId] = useState<string>();
+    const [redirectUrl, setRedirectUrl] = useState<string>("");
+    const [sbpMerchantId, setSbpMerchantId] = useState<string>("");
     const [isInvalid, setIsInvalid] = useState<boolean>(false);
 
     const sendRequest = async () => {
@@ -31,7 +31,7 @@ const QRCreate: React.FunctionComponent<QRCreateProps> = ({ setResponse, setStep
 
         const result: ResponseData = await response.json();
         setResponse(result);
-        setStep(1);
+        setStep(3);
     }
 
     return (
@@ -39,16 +39,16 @@ const QRCreate: React.FunctionComponent<QRCreateProps> = ({ setResponse, setStep
             <Card.ContentTitle>Введите данные:</Card.ContentTitle>
             <Groups alignItems={"flex-start"}>
                 <Groups design={'vertical'}>
-                    <Input placeholder='Счёт' value={account} onChange={(e) =>
-                        setAccount((e.target as HTMLTextAreaElement).value)}/>
-                    <Input placeholder='URL переадресации' value={redirectUrl} onChange={(e) =>
-                        setRedirectUrl((e.target as HTMLTextAreaElement).value)}/>
                     <Input invalid={isInvalid} placeholder='Merchant ID' value={sbpMerchantId} onChange={(e) => {
                         const value = (e.target as HTMLTextAreaElement).value;
                         setSbpMerchantId(value);
                         setIsInvalid(value === "")
                     }} />
-                    <Button design='accent' onClick={sendRequest} disabled={account === ""}>
+                    <Input placeholder='Счёт' value={account} onChange={(e) =>
+                        setAccount((e.target as HTMLTextAreaElement).value)}/>
+                    <Input placeholder='URL переадресации' value={redirectUrl} onChange={(e) =>
+                        setRedirectUrl((e.target as HTMLTextAreaElement).value)}/>
+                    <Button design='accent' onClick={sendRequest} disabled={sbpMerchantId === ""}>
                         Создать
                     </Button>
                 </Groups>
