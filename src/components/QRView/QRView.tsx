@@ -7,35 +7,67 @@ import {Edit} from "vienna.icons";
 import {LoaderFunctionArgs, useLoaderData} from "react-router-dom";
 import classNames from "classnames";
 
-interface OrderResponseData {
-    amount: number,
-    expirationDate: string,
-    id: string,
-    qr: {
-        id: string
-    }
-    status: {
-        date: string,
-        value: string
-    }
+interface QrOrder {
+    qrId: string,
+    qrStatus: string,
+    qrExpirationDate: string,
+    payload: string,
+    qrUrl: string,
+    subscriptionId: string,
+    order: {
+        id: string,
+        amount: number,
+        comment: string,
+        extra: {
+            apiClient: string,
+            apiClientVersion: string
+        },
+        status: {
+            value: string,
+            date: string
+        },
+        expirationDate: string,
+        qr: {
+            id: string,
+            additionalInfo: string,
+            paymentDetails: string
+        }
+    } | null
 }
 
 export async function loader({ params }: LoaderFunctionArgs): Promise<QR>  {
-    const response = await fetch(`/qr/${params.qrId}`, {
+    const responseQR = await fetch(`/qr/${params.qrId}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json;charset=utf-8',
             'Authorization': token
         }
     })
-    return response.json();
+    let qrData: QrOrder = await responseQR.json();
+
+    const responseOrder = await fetch(`/qr/order/${params.qrId}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8',
+            'Authorization': token
+        }
+    })
+
+    qrData.order = await responseOrder.json();
+    return qrData;
 }
 
 const QRView = () => {
-    const qrData = useLoaderData() as QR;
+    const qrData = useLoaderData() as QrOrder;
     const [sum, setSum] = useState<number>(0);
     const [load, setLoad] = useState(false);
     const [edit, setEdit] = useState(false);
+
+    useEffect(() => {
+        const amount = qrData.order?.amount ?? 0
+        setSum(amount)
+        setEdit(amount !== 0)
+    }, [qrData])
 
     const setQr = async () => {
         if(edit) {
