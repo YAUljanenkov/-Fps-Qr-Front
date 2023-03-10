@@ -2,3 +2,10 @@
     border-radius: 10%;
     border: 2px solid lightgray;
 }
+
+.card {
+    margin: 50px;
+    display: flex;
+    max-width: 800px !important;
+    align-items: center;
+}

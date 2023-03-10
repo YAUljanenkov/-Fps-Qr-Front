@@ -1,12 +1,10 @@
-import React, {useState} from 'react';
-import classNames from "classnames";
+import React from 'react';
 import styles from './App.module.css';
-import { Header, Card, Groups, Button } from 'vienna-ui';
-import QRCreate from "../components/QRCreate/QRCreate";
-import QRView from "../components/QRView/QRView";
-import QRSelect from "../components/QRSelect/QRSelect";
-import {LeftSmall} from "vienna.icons";
-import QRChoose from "../components/QRChoose/QRChoose";
+import {Link, Outlet, useLoaderData} from "react-router-dom";
+import {Header, Grid, Sidebar, Card, H5} from 'vienna-ui';
+import logo from '../static/logo.jpg' ;
+import {CodeQr} from 'vienna.icons';
+import {token} from '../private';
 
 export interface ResponseData {
     qrId: string,
@@ -16,48 +14,52 @@ export interface ResponseData {
     qrExpirationDate: string | null
 }
 
-const App = () => {
-    const [response, setResponse] = useState<ResponseData>();
-    const [step, setStep] = useState(0);
-    const headerNames = ["Выберите действие", "Создание QR кода", "Выбор существующего QR кода", "QR код"]
+export interface QR   {
+    qrId: string,
+    qrStatus: string,
+    qrExpirationDate: string,
+    payload: string,
+    qrUrl: string,
+    subscriptionId: string
+}
 
-    const getCurrentStep = (step: number) => {
-        switch (step) {
-            case 0:
-                return <QRChoose moveToNew={() => setStep(1)}
-                                 moveToExisting={() => setStep(2)}
-                />;
-            case 1:
-                return <QRCreate setResponse={setResponse} setStep={setStep} />;
-            case 2:
-                return <QRSelect setResponse={setResponse} setStep={setStep} />
-            case 3:
-                return <QRView responseData={response} setStep={setStep} />;
+export async function loader(): Promise<QR[]>  {
+    const response = await fetch("/qr", {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8',
+            'Authorization': token
         }
-    }
+    })
+    return response.json();
+}
 
+const App = () => {
+    const qrs = useLoaderData() as QR[];
     return (
         <>
-            <Header size={'m'} />
-            <div className={classNames(styles.main)}>
-                <Card
-                    className={classNames(styles.card)}
-                    header={
-                        <Groups design='horizontal' size='xl'>
-                            { step > 0 &&
-                                <div className={classNames(styles.ButtonLeft)}>
-                                    <Button square design={'ghost'} onClick={() => setStep(0)}>
-                                        <LeftSmall/>
-                                    </Button>
-                                </div>
-                            }
-                            <Card.Title>{headerNames[step]}</Card.Title>
-                        </Groups>
-                    }
-                >
-                    {getCurrentStep(step)}
-                </Card>
-            </div>
+            <Header size={'m'} logo={
+                <img className={styles.logo} alt={'sellable logo'} src={logo}/>
+            }/>
+            <Grid.Row>
+                {/* This is for "Add QR" button */}
+                <Grid.Col size={12}>
+                </Grid.Col>
+            </Grid.Row>
+            <Grid.Row>
+                <Grid.Col size={4}>
+                    <Sidebar size={'l'} header={<H5 color={'seattle100'} style={{margin: '0'}}>Выберите QR ID</H5>} width={'100%'} className={styles.sidebar}>
+                        {qrs.map((elem, index) => {
+                            return <Link to={`/tag/${elem.qrId}`}>
+                                <Sidebar.Item icon={<CodeQr/>} key={index}>{elem.qrId}</Sidebar.Item>
+                            </Link>
+                        })}
+                    </Sidebar>
+                </Grid.Col>
+                <Grid.Col size={8}>
+                        <Outlet/>
+                </Grid.Col>
+            </Grid.Row>
         </>
     );
 }
