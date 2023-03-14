@@ -5,6 +5,7 @@ import App, {loader as qrsLoader} from "./App/App";
 import reportWebVitals from './reportWebVitals';
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import QRView, {loader as qrLoader} from "./components/QRView/QRView";
+import Index from '../src/components/Index/Index';
 
 const router = createBrowserRouter([
     {
@@ -12,6 +13,7 @@ const router = createBrowserRouter([
         element: <App/>,
         loader: qrsLoader,
         children: [
+            { index: true, element:  <Index/>},
             {
                 path: "/tag/:qrId",
                 element: <QRView/>,
