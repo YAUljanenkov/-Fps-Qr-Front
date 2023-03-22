@@ -10,6 +10,7 @@ import App from "./components/App/App";
 import Index from './components/QRs/Index/Index';
 import OrderSelect, {loader as ordersLoader} from "./components/Orders/OrderSelect/OrderSelect";
 import OrderIndex from "./components/Orders/OrderIndex/OrderIndex";
+import OrderView, {loader as orderLoader} from "./components/Orders/OrderView/OrderView";
 
 
 const router = createBrowserRouter([
@@ -39,7 +40,12 @@ const router = createBrowserRouter([
                 element: <OrderSelect/>,
                 loader: ordersLoader,
                 children: [
-                    {index: true, element: <OrderIndex/> }
+                    { index: true, element: <OrderIndex/> },
+                    {
+                        path: '/orders/order/:orderId',
+                        element: <OrderView/>,
+                        loader: orderLoader
+                    }
                 ]
             }
         ]

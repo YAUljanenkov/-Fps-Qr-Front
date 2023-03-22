@@ -45,14 +45,14 @@ export async function loader(): Promise<Order[]>  {
     }
 }
 
+export const parsedDate = (date: string) => {
+    const parsedDate = new Date(Date.parse(date));
+    return `${parsedDate.toLocaleDateString('ru-RU')} ${parsedDate.toLocaleTimeString('ru-RU')}`
+}
+
 const OrderSelect = () => {
     const orders = useLoaderData() as Order[];
     const [activeOrder, setActiveOrder] = useState<string | null>(null);
-
-    const parsedDate = (date: string) => {
-        const parsedDate = new Date(Date.parse(date));
-        return `${parsedDate.toLocaleDateString('ru-RU')} ${parsedDate.toLocaleTimeString('ru-RU')}`
-    }
 
     return (
         <>
@@ -64,12 +64,12 @@ const OrderSelect = () => {
                         </H5>
                     } width={'100%'} className={styles.sidebar}>
                         {orders.map((elem, index) => {
-                            return <Link to={`/orders`} key={index}>
+                            return <Link to={`/orders/order/${elem.id}`} key={index}>
                                 <Sidebar.Item id={elem.id}
                                               active={activeOrder === elem.id}
                                               icon={<Invoice1/>}
                                               onClick={() => setActiveOrder(elem.id)}>
-                                    <span className={activeOrder !== elem.id ? styles.price : ''}> {elem.amount}₽</span> &nbsp; {parsedDate(elem.expirationDate)}
+                                    <span className={activeOrder !== elem.id ? styles.price : ''}> {elem.amount.toFixed(2)}₽</span> &nbsp; {parsedDate(elem.expirationDate)}
                                 </Sidebar.Item>
                             </Link>
                         })}

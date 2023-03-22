@@ -17,7 +17,6 @@ const App = () => {
     }
 
     useEffect(() => {
-        console.log()
         navigate(state.value)
     }, [state.value])
 
