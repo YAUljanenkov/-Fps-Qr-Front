@@ -1,66 +1,83 @@
 import React, {useState} from 'react';
-import {Card, Groups, Input, Button} from 'vienna-ui';
-import {QrScanner} from '@yudiel/react-qr-scanner';
-import {token} from "../../private";
-import {ResponseData} from "../../App/App";
+import styles from './QRSelect.module.css';
+import {Link, Outlet, useLoaderData} from "react-router-dom";
+import {Header, Grid, Sidebar, Button, H5} from 'vienna-ui';
+import logo from '../../static/logo.jpg' ;
+import {CodeQr, Add} from 'vienna.icons';
+import {token} from '../../private';
+import QRCreate from "../QRCreate/QRCreate";
 
-interface QRSelectProps {
-    setResponse: (arg: ResponseData) => void
-    setStep: (arg: number) => void
+export interface ResponseData {
+    qrId: string,
+    qrStatus: string,
+    payload: string,
+    qrUrl: string
+    qrExpirationDate: string | null
 }
 
-const QRSelect: React.FunctionComponent<QRSelectProps> = ({setResponse, setStep}: QRSelectProps) => {
-    const [isInvalid, setIsInvalid] = useState<boolean>(false);
-    const [qrId, setQrId] = useState("");
+export interface QR   {
+    qrId: string,
+    qrStatus: string,
+    qrExpirationDate: string,
+    payload: string,
+    qrUrl: string,
+    subscriptionId: string
+}
 
-    const getQrIdFromLink = (link: string): string | null => {
-        // https://qr.nspk.ru/AS7F6AD20F204B30A0D0C8D3996D298D?type=01&bank=10000001&cur=RUB&crc=C08B
-        if (link.includes("https://qr.nspk.ru/") && link.indexOf("https://qr.nspk.ru/") === 0) {
-            return link.substring(19, 51);
-        }
-        return null;
-    }
-
-    const getQrDataFromId = async () => {
-        const response = await fetch(`/qr/status/${qrId}`, {
+export async function loader(): Promise<QR[]>  {
+    try {
+        const response = await fetch("/qr", {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
                 'Authorization': token
             }
-        });
+        })
 
-        const result: ResponseData = await response.json();
-        setResponse(result);
-        console.log(result);
-        setStep(3);
+        if (!response.ok) {
+            return [];
+        }
+
+        return response.json();
+    } catch (e) {
+        return [];
     }
+}
 
+const QRSelect = () => {
+    const qrs = useLoaderData() as QR[];
+    const [isOpen, setIsOpen] = useState(false);
     return (
         <>
-            <Card.ContentTitle>Отсканируйте QR код с помощью камеры</Card.ContentTitle>
-            <QrScanner
-                onDecode={(result) => {
-                    const value = getQrIdFromLink(result);
-                    console.log(value);
-                    if (value && value !== "") {
-                        setQrId(value);
-                    }
-                }
-            }
-                onError={(error) => console.log(error?.message)}
-            />
-            <Card.ContentTitle>Или введите ID QR кода вручную:</Card.ContentTitle>
-            <Groups design={'horizontal'}>
-                <Input invalid={isInvalid} placeholder='QR ID' value={qrId} onChange={(e) => {
-                    const value = (e.target as HTMLTextAreaElement).value;
-                    setQrId(value);
-                    setIsInvalid(value === "")
-                }} />
-                <Button disabled={qrId === ""} onClick={getQrDataFromId}>Сохранить</Button>
-            </Groups>
+            <Header  size={'m'} logo={
+                <img className={styles.logo} alt={'sellable logo'} src={logo}/>
+            }/>
+            <Grid.Row className={styles.gridHeight}>
+                <Grid.Col size={4}>
+                    <Sidebar size={'l'} header={
+                        <H5 color={'seattle100'} style={{margin: '0'}}>
+                            {qrs.length === 0? `Cписок QR кодов пуст.`: `Выберите QR ID`}
+                        </H5>
+                    } width={'100%'} className={styles.sidebar}>
+                        {qrs.map((elem, index) => {
+                            return <Link to={`/tag/${elem.qrId}`} key={index}>
+                                <Sidebar.Item icon={<CodeQr/>} >{elem.qrId}</Sidebar.Item>
+                            </Link>
+                        })}
+                    </Sidebar>
+                </Grid.Col>
+                <Grid.Col size={8}>
+                        <Outlet/>
+                </Grid.Col>
+            </Grid.Row>
+            <div className={styles.addQrButton}>
+                <Button size={'xl'} square design={'accent'} onClick={() => setIsOpen(true)}>
+                    <Add size={'l'}/>
+                </Button>
+            </div>
+            <QRCreate isOpen={isOpen} setIsOpen={setIsOpen}/>
         </>
-    )
+    );
 }
 
 export default QRSelect;

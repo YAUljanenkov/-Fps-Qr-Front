@@ -1,16 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App, {loader as qrsLoader} from "./App/App";
+import QRSelect, {loader as qrsLoader} from "./components/QRSelect/QRSelect";
 import reportWebVitals from './reportWebVitals';
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import QRView, {loader as qrLoader} from "./components/QRView/QRView";
 import Index from '../src/components/Index/Index';
+import {createAction} from "./components/QRCreate/QRCreate";
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <App/>,
+        element: <QRSelect/>,
         loader: qrsLoader,
         children: [
             { index: true, element:  <Index/>},
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
                 path: "/tag/:qrId",
                 element: <QRView/>,
                 loader: qrLoader
+            },
+            {
+                path: '/create',
+                action: createAction
             }
         ]
     }
