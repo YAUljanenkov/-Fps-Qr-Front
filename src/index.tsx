@@ -7,22 +7,30 @@ import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import QRView, {loader as qrLoader} from "./components/QRView/QRView";
 import Index from '../src/components/Index/Index';
 import {createAction} from "./components/QRCreate/QRCreate";
+import App from "./components/App/App";
+
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <QRSelect/>,
-        loader: qrsLoader,
+        element: <App/>,
         children: [
-            { index: true, element:  <Index/>},
             {
-                path: "/tag/:qrId",
-                element: <QRView/>,
-                loader: qrLoader
-            },
-            {
-                path: '/create',
-                action: createAction
+                path: '/qr',
+                element: <QRSelect/>,
+                loader: qrsLoader,
+                children: [
+                    { index: true, element:  <Index/>},
+                    {
+                        path: "/qr/tag/:qrId",
+                        element: <QRView/>,
+                        loader: qrLoader
+                    },
+                    {
+                        path: '/qr/create',
+                        action: createAction
+                    }
+                ]
             }
         ]
     }

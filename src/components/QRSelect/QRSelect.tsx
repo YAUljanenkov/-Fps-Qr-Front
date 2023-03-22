@@ -1,8 +1,7 @@
 import React, {useState} from 'react';
 import styles from './QRSelect.module.css';
 import {Link, Outlet, useLoaderData} from "react-router-dom";
-import {Header, Grid, Sidebar, Button, H5} from 'vienna-ui';
-import logo from '../../static/logo.jpg' ;
+import {Grid, Sidebar, Button, H5} from 'vienna-ui';
 import {CodeQr, Add} from 'vienna.icons';
 import {token} from '../../private';
 import QRCreate from "../QRCreate/QRCreate";
@@ -49,9 +48,6 @@ const QRSelect = () => {
     const [isOpen, setIsOpen] = useState(false);
     return (
         <>
-            <Header  size={'m'} logo={
-                <img className={styles.logo} alt={'sellable logo'} src={logo}/>
-            }/>
             <Grid.Row className={styles.gridHeight}>
                 <Grid.Col size={4}>
                     <Sidebar size={'l'} header={
@@ -60,7 +56,7 @@ const QRSelect = () => {
                         </H5>
                     } width={'100%'} className={styles.sidebar}>
                         {qrs.map((elem, index) => {
-                            return <Link to={`/tag/${elem.qrId}`} key={index}>
+                            return <Link to={`/qr/tag/${elem.qrId}`} key={index}>
                                 <Sidebar.Item icon={<CodeQr/>} >{elem.qrId}</Sidebar.Item>
                             </Link>
                         })}

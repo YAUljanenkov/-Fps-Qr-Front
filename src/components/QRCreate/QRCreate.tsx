@@ -56,7 +56,7 @@ const QRCreate: React.FunctionComponent<QRCreateProps> = ({isOpen, setIsOpen}: Q
             }>
                 <Card.ContentTitle>Cоздайте новый QR-код</Card.ContentTitle>
                 <Groups alignItems={"flex-start"}>
-                    <Form method={'post'} action={'/create'} onSubmit={() => {
+                    <Form method={'post'} action={'/qr/create'} onSubmit={() => {
                         setIsOpen(false);
                     }}>
                         <Groups design={'vertical'}>
