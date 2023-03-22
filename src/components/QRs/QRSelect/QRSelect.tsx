@@ -3,16 +3,8 @@ import styles from './QRSelect.module.css';
 import {Link, Outlet, useLoaderData} from "react-router-dom";
 import {Grid, Sidebar, Button, H5} from 'vienna-ui';
 import {CodeQr, Add} from 'vienna.icons';
-import {token} from '../../private';
+import {token} from '../../../private';
 import QRCreate from "../QRCreate/QRCreate";
-
-export interface ResponseData {
-    qrId: string,
-    qrStatus: string,
-    payload: string,
-    qrUrl: string
-    qrExpirationDate: string | null
-}
 
 export interface QR   {
     qrId: string,
@@ -46,6 +38,7 @@ export async function loader(): Promise<QR[]>  {
 const QRSelect = () => {
     const qrs = useLoaderData() as QR[];
     const [isOpen, setIsOpen] = useState(false);
+    const [activeQR, setActiveQR] = useState<string | null>(null)
     return (
         <>
             <Grid.Row className={styles.gridHeight}>
@@ -56,8 +49,12 @@ const QRSelect = () => {
                         </H5>
                     } width={'100%'} className={styles.sidebar}>
                         {qrs.map((elem, index) => {
-                            return <Link to={`/qr/tag/${elem.qrId}`} key={index}>
-                                <Sidebar.Item icon={<CodeQr/>} >{elem.qrId}</Sidebar.Item>
+                            return <Link to={`/qrs/tag/${elem.qrId}`} key={index}>
+                                <Sidebar.Item icon={<CodeQr/>}
+                                              active={elem.qrId === activeQR}
+                                              onClick={() => setActiveQR(elem.qrId)}>
+                                    {elem.qrId}
+                                </Sidebar.Item>
                             </Link>
                         })}
                     </Sidebar>

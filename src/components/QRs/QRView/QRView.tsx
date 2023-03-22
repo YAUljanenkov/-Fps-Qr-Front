@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Groups, Button, Card, Input} from 'vienna-ui';
 import {QR} from "../QRSelect/QRSelect";
 import styles from './QRView.module.css';
-import {token} from "../../private";
+import {token} from "../../../private";
 import {Edit} from "vienna.icons";
 import {LoaderFunctionArgs, useLoaderData} from "react-router-dom";
 import classNames from "classnames";
