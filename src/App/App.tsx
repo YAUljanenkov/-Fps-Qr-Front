@@ -49,24 +49,10 @@ const App = () => {
     const [isOpen, setIsOpen] = useState(false);
     return (
         <>
-            <Header size={'m'} logo={
+            <Header  size={'m'} logo={
                 <img className={styles.logo} alt={'sellable logo'} src={logo}/>
             }/>
-            <Grid.Row>
-                {/* This is for "Add QR" button */}
-                <Grid.Col size={12}>
-                    {/*<Form className={styles.addQrForm}>*/}
-                    {/*    <Input style={{width: "32ch"}} placeholder={'Существующий QR ID'}/>*/}
-                    {/*    <Button>*/}
-                    {/*        Добавить*/}
-                    {/*    </Button>*/}
-                    {/*    <Button design={'accent'} onClick={() => setIsOpen(true)}>*/}
-                    {/*        Cоздать*/}
-                    {/*    </Button>*/}
-                    {/*</Form>*/}
-                </Grid.Col>
-            </Grid.Row>
-            <Grid.Row>
+            <Grid.Row className={styles.gridHeight}>
                 <Grid.Col size={4}>
                     <Sidebar size={'l'} header={
                         <H5 color={'seattle100'} style={{margin: '0'}}>
