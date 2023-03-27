@@ -1,0 +1,12 @@
+.qrBorder {
+    border-radius: 10%;
+    border: 2px solid lightgray;
+}
+
+.card {
+    margin: 3vw;
+    display: flex;
+    width: 80% !important;
+    max-width: 800px !important;
+    align-items: center;
+}

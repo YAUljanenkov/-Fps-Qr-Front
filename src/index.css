@@ -5,6 +5,25 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  line-height: 1.5;
+  color: #121212;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  line-height: 1.5;
+  color: #121212;
 }
 
 code {
