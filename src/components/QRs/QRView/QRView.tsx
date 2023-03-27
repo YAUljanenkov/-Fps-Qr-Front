@@ -1,70 +1,45 @@
 import React, {useEffect, useState} from 'react';
 import {Groups, Button, Card, Input} from 'vienna-ui';
-import {QR} from "../QRSelect/QRSelect";
 import styles from './QRView.module.css';
 import {token} from "../../../private";
 import {Edit} from "vienna.icons";
 import {LoaderFunctionArgs, useLoaderData} from "react-router-dom";
 import classNames from "classnames";
+import {QrOrder} from "../../../types/QrOrder";
+import {getQrOrder, getQR} from "../../../network/requests";
 
-interface QrOrder {
-    qrId: string,
-    qrStatus: string,
-    qrExpirationDate: string,
-    payload: string,
-    qrUrl: string,
-    subscriptionId: string,
-    order: {
-        id: string,
-        amount: number,
-        comment: string,
-        extra: {
-            apiClient: string,
-            apiClientVersion: string
-        },
-        status: {
-            value: string,
-            date: string
-        },
-        expirationDate: string,
-        qr: {
-            id: string,
-            additionalInfo: string,
-            paymentDetails: string
-        }
-    } | null
-}
+export async function loader({ params }: LoaderFunctionArgs): Promise<QrOrder | null>  {
+    if (!params.qrId) {
+        return null;
+    }
+    let qrData: QrOrder;
+    try {
+        const responseQR = await getQR(params.qrId);
+        qrData = {order: null, ...await responseQR.data};
 
-export async function loader({ params }: LoaderFunctionArgs): Promise<QR>  {
-    const responseQR = await fetch(`/qr/${params.qrId}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json;charset=utf-8',
-            'Authorization': token
-        }
-    })
-    let qrData: QrOrder = await responseQR.json();
+    } catch (e) {
+        console.error(e);
+        return null;
+    }
 
-    const responseOrder = await fetch(`/qr/order/${params.qrId}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json;charset=utf-8',
-            'Authorization': token
-        }
-    })
+    try {
+        const responseOrder = await getQrOrder(params.qrId);
+        qrData.order = await responseOrder.data;
+    } catch (e) {
+        console.error(e);
+    }
 
-    qrData.order = await responseOrder.json();
     return qrData;
 }
 
 const QRView = () => {
-    const qrData = useLoaderData() as QrOrder;
+    const qrData = useLoaderData() as QrOrder | null;
     const [sum, setSum] = useState<number>(0);
     const [load, setLoad] = useState(false);
     const [edit, setEdit] = useState(false);
 
     useEffect(() => {
-        const amount = qrData.order?.amount ?? 0
+        const amount = qrData?.order?.amount ?? 0
         setSum(amount)
         setEdit(amount !== 0)
     }, [qrData])
@@ -84,7 +59,7 @@ const QRView = () => {
             body: JSON.stringify({
                 amount: sum,
                 qr: {
-                    id: qrData.qrId,
+                    id: qrData?.qrId,
                 }
             })
         });
@@ -98,10 +73,10 @@ const QRView = () => {
       <>
           <Card className={classNames(styles.card)}>
             <Groups design={'vertical'} alignItems={'center'} justifyContent={"center"}>
-                <b>{qrData.qrId}</b>
+                <b>{qrData?.qrId}</b>
                 <img
                     className={styles.qrBorder}
-                    src={qrData.qrUrl}
+                    src={qrData?.qrUrl}
                     alt="QR"
                     style={{margin: "10px auto"}}
                 />

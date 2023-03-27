@@ -3,34 +3,36 @@ import {Card, Grid} from "vienna-ui";
 import classNames from "classnames";
 import styles from './OrderView.module.css';
 import {LoaderFunctionArgs, useLoaderData} from "react-router-dom";
-import {Order, parsedDate} from '../OrderSelect/OrderSelect';
-import {token} from "../../../private";
+import {parsedDate} from '../OrderSelect/OrderSelect';
+import { Order } from "../../../types/Order";
+import {getOrder} from "../../../network/requests";
 
-export async function loader({ params }: LoaderFunctionArgs): Promise<Order>  {
-    const responseOrder = await fetch(`/order/${params.orderId}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json;charset=utf-8',
-            'Authorization': token
-        }
-    })
-
-    return await responseOrder.json();
+export async function loader({ params }: LoaderFunctionArgs): Promise<Order | null>  {
+    if (!params.orderId) {
+        return null;
+    }
+    try {
+        const responseOrder = await getOrder(params.orderId);
+        return await responseOrder.data;
+    } catch (e) {
+        console.log(e);
+        return null;
+    }
 }
 
 const OrderView = () =>  {
-    const order = useLoaderData() as Order;
+    const order = useLoaderData() as Order | null;
     return(
         <Card className={styles.card}>
             <div className={styles.cardContent}>
-                <b className={styles.payInfo}>{order.amount.toFixed(2)}₽</b>
+                <b className={styles.payInfo}>{order?.amount.toFixed(2)}₽</b>
                 <br/>
                 <Grid.Row className={styles.row}>
                     <Grid.Col size={4}>
                         <b>id</b>
                     </Grid.Col>
                     <Grid.Col size={8}>
-                        {order.id}
+                        {order?.id}
                     </Grid.Col>
                 </Grid.Row>
                 <Grid.Row className={classNames(styles.row, styles.rowBorder)}>
@@ -38,7 +40,7 @@ const OrderView = () =>  {
                         <b>QR ID</b>
                     </Grid.Col>
                     <Grid.Col size={8}>
-                        {order.qr.id}
+                        {order?.qr.id}
                     </Grid.Col>
                 </Grid.Row>
                 <Grid.Row className={classNames(styles.row, styles.rowBorder)}>
@@ -46,7 +48,7 @@ const OrderView = () =>  {
                         <b>Cтатус</b>
                     </Grid.Col>
                     <Grid.Col size={8}>
-                        {order.status.value}
+                        {order?.status.value}
                     </Grid.Col>
                 </Grid.Row>
                 <Grid.Row className={classNames(styles.row, styles.rowBorder)}>
@@ -54,7 +56,7 @@ const OrderView = () =>  {
                         <b>Валиден до</b>
                     </Grid.Col>
                     <Grid.Col size={8}>
-                        {parsedDate(order.expirationDate)}
+                        {parsedDate(order?.expirationDate ?? "")}
                     </Grid.Col>
                 </Grid.Row>
             </div>

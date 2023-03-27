@@ -3,44 +3,15 @@ import styles from './OrderSelect.module.css';
 import {Link, Outlet, useLoaderData} from "react-router-dom";
 import {Grid, Sidebar, H5} from 'vienna-ui';
 import {Invoice1} from 'vienna.icons';
-import {token} from '../../../private';
-
-export interface Order {
-    id: string,
-    amount: number,
-    comment: string,
-    extra: {
-        apiClient: string,
-        apiClientVersion: string
-    },
-    status: {
-        value: string,
-        date: string
-    },
-    expirationDate: string,
-    qr: {
-        id: string,
-        additionalInfo: string,
-        paymentDetails: string
-    }
-}
+import {Order} from "../../../types/Order";
+import {getOrders} from "../../../network/requests";
 
 export async function loader(): Promise<Order[]>  {
     try {
-        const response = await fetch("/order", {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json;charset=utf-8',
-                'Authorization': token
-            }
-        })
-
-        if (!response.ok) {
-            return [];
-        }
-
-        return response.json();
-    } catch (e) {
+        const response = await getOrders();
+        return response.data;
+    } catch (error) {
+        console.error(error);
         return [];
     }
 }

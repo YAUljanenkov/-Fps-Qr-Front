@@ -3,6 +3,7 @@ import styles from './QRCreate.module.css';
 import {Card, Groups, Input, Button, Modal} from 'vienna-ui';
 import raif_qr from "../../../static/raif_qr.jpg"
 import {ActionFunctionArgs, Form, redirect} from "react-router-dom";
+import {createQR} from "../../../network/requests";
 
 interface QRCreateProps {
     isOpen: boolean,
@@ -12,19 +13,12 @@ interface QRCreateProps {
 
 export async function createAction({request}: ActionFunctionArgs) {
     const {account, redirectUrl, sbpMerchantId} = Object.fromEntries(await request.formData());
-    await fetch("/qrs/create", {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json;charset=utf-8'
-        },
-        body: JSON.stringify({
-                qrType: 'QRVariable',
-                account,
-                redirectUrl,
-                sbpMerchantId
-            }
-        )
-    });
+
+    try {
+        await createQR(account, redirectUrl, sbpMerchantId);
+    } catch (e) {
+        console.error(e);
+    }
 
     return redirect(window.location.href.replace('create', ''));
 }

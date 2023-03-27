@@ -3,34 +3,16 @@ import styles from './QRSelect.module.css';
 import {Link, Outlet, useLoaderData} from "react-router-dom";
 import {Grid, Sidebar, Button, H5} from 'vienna-ui';
 import {CodeQr, Add} from 'vienna.icons';
-import {token} from '../../../private';
 import QRCreate from "../QRCreate/QRCreate";
+import {getQRs} from "../../../network/requests";
+import {QR} from "../../../types/QR";
 
-export interface QR   {
-    qrId: string,
-    qrStatus: string,
-    qrExpirationDate: string,
-    payload: string,
-    qrUrl: string,
-    subscriptionId: string
-}
-
-export async function loader(): Promise<QR[]>  {
+export async function loader()  {
     try {
-        const response = await fetch("/qr", {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json;charset=utf-8',
-                'Authorization': token
-            }
-        })
-
-        if (!response.ok) {
-            return [];
-        }
-
-        return response.json();
-    } catch (e) {
+        const response = await getQRs();
+        return response.data;
+    } catch (error) {
+        console.error(error);
         return [];
     }
 }
