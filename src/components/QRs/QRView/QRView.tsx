@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {Groups, Button, Card, Input} from 'vienna-ui';
-import {QR} from "../../App/App";
+import {QR} from "../QRSelect/QRSelect";
 import styles from './QRView.module.css';
-import {token} from "../../private";
+import {token} from "../../../private";
 import {Edit} from "vienna.icons";
 import {LoaderFunctionArgs, useLoaderData} from "react-router-dom";
 import classNames from "classnames";
@@ -105,8 +105,6 @@ const QRView = () => {
                     alt="QR"
                     style={{margin: "10px auto"}}
                 />
-
-
                 <Card.ContentTitle>Введите сумму для активации QR кода:</Card.ContentTitle>
                 <Groups design={'horizontal'} style={{marginLeft: "50px"}}>
                     <Input disabled={edit} placeholder='Сумма списания' value={sum === 0? "" : String(sum)} onChange={(e) => {

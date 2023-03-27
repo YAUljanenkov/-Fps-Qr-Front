@@ -14,7 +14,7 @@ brew install node
 следующего сдержания:
 
 ```typescript
-export const token = 'Bearer <token here>'
+export const token = '<token here>'
 ```
 
 Теперь осталось только вернуться в корневую директорию 
