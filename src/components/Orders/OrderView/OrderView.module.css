@@ -1,0 +1,32 @@
+.card {
+    margin: 3vw;
+    display: flex;
+    width: 80% !important;
+    max-width: 800px !important;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.cardContent {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: calc((100vw - 100vw * 0.4 - 6vw)*0.8);
+    max-width: 600px;
+}
+
+.payInfo {
+    font-size: 2.5rem;
+    font-family: Roboto, Helvetica, "Helvetica New", Arial, sans-serif;
+}
+
+.row {
+    /*font-size: 14px;*/
+    padding: 12px;
+    color: #353535;
+}
+
+.rowBorder {
+    border-top: 1px solid #dedede;
+}

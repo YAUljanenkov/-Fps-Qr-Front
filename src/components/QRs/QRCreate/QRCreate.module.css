@@ -1,0 +1,15 @@
+.qrImage {
+    width: 150px;
+    border-radius: 10%;
+}
+
+.addQrButton {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}
+
+.topBorder {
+    border-top: 1px solid lightgrey;
+    padding-top: 5px;
+}
