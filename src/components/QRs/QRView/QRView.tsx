@@ -1,12 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {Groups, Button, Card, Input} from 'vienna-ui';
 import styles from './QRView.module.css';
-import {token} from "../../../private";
 import {Edit} from "vienna.icons";
 import {LoaderFunctionArgs, useLoaderData} from "react-router-dom";
 import classNames from "classnames";
 import {QrOrder} from "../../../types/QrOrder";
-import {getQrOrder, getQR} from "../../../network/requests";
+import {getQrOrder, getQR, createOrder} from "../../../network/requests";
 
 export async function loader({ params }: LoaderFunctionArgs): Promise<QrOrder | null>  {
     if (!params.qrId) {
@@ -45,24 +44,22 @@ const QRView = () => {
     }, [qrData])
 
     const setQr = async () => {
+        if (!qrData?.qrId) {
+            // add error alert.
+            return;
+        }
+
         if(edit) {
             setEdit(false);
             return;
         }
+
         setLoad(true);
-        await fetch("/order/create", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': token
-            },
-            body: JSON.stringify({
-                amount: sum,
-                qr: {
-                    id: qrData?.qrId,
-                }
-            })
-        });
+        try {
+            await createOrder(sum, qrData?.qrId)
+        } catch (e) {
+            console.error(e);
+        }
 
         setLoad(false);
         setEdit(true);
