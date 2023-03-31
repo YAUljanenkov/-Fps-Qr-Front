@@ -18,9 +18,15 @@ export async function loader()  {
 }
 
 const QRSelect = () => {
+    const getActiveQR = () => {
+        let path = window.location.pathname
+        let qr = path.substring(path.lastIndexOf('/') + 1)
+        return qr? qr : null;
+    }
+
     const qrs = useLoaderData() as QR[];
     const [isOpen, setIsOpen] = useState(false);
-    const [activeQR, setActiveQR] = useState<string | null>(null)
+    const [activeQR, setActiveQR] = useState<string | null>(getActiveQR())
     return (
         <>
             <Grid.Row className={styles.gridHeight}>

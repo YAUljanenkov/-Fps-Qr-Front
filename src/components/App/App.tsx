@@ -2,7 +2,7 @@ import {Header} from "vienna-ui";
 import React, {useEffect, useState} from "react";
 import logo from '../../static/logo.jpg';
 import styles from './App.module.css';
-import {Outlet, redirect} from "react-router-dom";
+import {Outlet, useNavigate} from "react-router-dom";
 
 const App = () => {
     const getCurrentLocation = () => {
@@ -18,13 +18,14 @@ const App = () => {
     ];
 
     const [path, setPath] = useState<string>(getCurrentLocation());
+    const navigate = useNavigate();
     const handleChange = (e: React.FormEvent, value: string) => {
         setPath(value);
     }
 
     useEffect(() => {
         if (!window.location.pathname.includes(path)) {
-            redirect(path)
+            navigate(path)
         }
     }, [path])
 

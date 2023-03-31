@@ -22,8 +22,14 @@ export const parsedDate = (date: string) => {
 }
 
 const OrderSelect = () => {
+    const getActiveOrder = () => {
+        let path = window.location.pathname
+        let order = path.substring(path.lastIndexOf('/') + 1)
+        return order? order : null;
+    }
+
     const orders = useLoaderData() as Order[];
-    const [activeOrder, setActiveOrder] = useState<string | null>(null);
+    const [activeOrder, setActiveOrder] = useState<string | null>(getActiveOrder());
 
     return (
         <>
