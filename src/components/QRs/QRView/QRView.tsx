@@ -4,8 +4,12 @@ import styles from './QRView.module.css';
 import {Edit, Cancel, InfoFilled} from "vienna.icons";
 import {LoaderFunctionArgs, useLoaderData, Form, ActionFunctionArgs, redirect} from "react-router-dom";
 import classNames from "classnames";
-import {QrOrder} from "../../../types/QrOrder";
+import {QR} from "../../../types/QR";
 import {getQrOrder, getQR, createOrder} from "../../../network/requests";
+import Switch from 'react-switch';
+import {ReceiptItem} from "../../../types/ReceiptItem";
+import ReceiptConfigurator from './ReceiptConfigurator/ReceiptConfigurator';
+import {handleFloat, restoreFloat} from "../../App/App";
 
 export async function stopAction({request, params}: ActionFunctionArgs) {
     console.log('called!')
@@ -13,14 +17,14 @@ export async function stopAction({request, params}: ActionFunctionArgs) {
     return redirect(request.url.replace(`/stop/${params.orderId}`, ''));
 }
 
-export async function loader({ params }: LoaderFunctionArgs): Promise<QrOrder | null>  {
+export async function loader({ params }: LoaderFunctionArgs): Promise<QR | null>  {
     if (!params.qrId) {
         return null;
     }
-    let qrData: QrOrder;
+    let qrData: QR;
     try {
         const responseQR = await getQR(params.qrId);
-        qrData = {order: null, ...await responseQR.data};
+        qrData = await responseQR.data;
 
     } catch (e) {
         console.error(e);
@@ -37,18 +41,37 @@ export async function loader({ params }: LoaderFunctionArgs): Promise<QrOrder | 
     return qrData;
 }
 
+export const defaultReceiptItem: ReceiptItem = {
+    name: '',
+    price: '',
+    quantity: '1',
+    amount: 0,
+    vatType: 'VAT20',
+}
+
 const QRView = () => {
-    const qrData = useLoaderData() as QrOrder | null;
-    const [sum, setSum] = useState<number>(0);
+    const qrData = useLoaderData() as QR | null;
+    const [sum, setSum] = useState('');
     const [load, setLoad] = useState(false);
     const [edit, setEdit] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
+    const [hasReceipt, setHasReceipt] = useState(false);
+    const [receipt, setReceipt] = useState<ReceiptItem[] | undefined>(undefined);
 
     useEffect(() => {
-        const amount = qrData?.order?.amount ?? 0
-        setSum(amount)
+        const amount = qrData?.order?.amount
+        setSum(`${amount ? amount : ''}`)
         setEdit(amount !== 0)
     }, [qrData])
+
+    useEffect(() => {
+        const countFinalSum = () => {
+            return (receipt?.length ?? 0) > 0 ? receipt?.map(elem => elem.amount)?.reduce((prev, curr) => prev + curr) : 0
+        }
+        if(hasReceipt) {
+            setSum(`${countFinalSum() ?? 0}`);
+        }
+    }, [receipt, hasReceipt])
 
     const setQr = async () => {
         if (!qrData?.qrId) {
@@ -63,7 +86,7 @@ const QRView = () => {
 
         setLoad(true);
         try {
-            await createOrder(sum, qrData?.qrId)
+            await createOrder(restoreFloat(sum), qrData?.qrId)
         } catch (e) {
             console.error(e);
         }
@@ -84,19 +107,37 @@ const QRView = () => {
                     style={{margin: "10px auto"}}
                 />
                 <Card.ContentTitle>Введите сумму для активации QR кода:</Card.ContentTitle>
-                <Groups design={'horizontal'} style={{marginLeft: "50px"}}>
-                    <Input disabled={edit} placeholder='Сумма списания' value={sum === 0? "" : String(sum)} onChange={(e) => {
-                        const value = (e.target as HTMLTextAreaElement).value.replace(/[^\d.]/g, '');
-                        setSum(Number(value));
+                <Groups design={'horizontal'} justifyContent={'center'}>
+                    <Input postfix={<b>₽</b>} disabled={edit || hasReceipt} placeholder='Сумма списания' value={sum === ''? "" : String(sum)} onChange={(e) => {
+                        const value = handleFloat((e.target as HTMLTextAreaElement).value, 16, 2);
+                        setSum(value);
                     }} />
-                    <Button loading={load} disabled={sum === 0} onClick={setQr}>{edit? <Edit/> : 'OK'}</Button>
                     {/* @ts-ignore */ /* This is needed due to bug in vienna-ui */}
-                    <Tooltip content={'Отменить заказ'}>
+                    <Tooltip content={'Изменить сумму'} anchor={'top'}>
+                        <Button loading={load} disabled={sum === '' || hasReceipt} onClick={setQr}>{edit? <Edit/> : 'OK'}</Button>
+                    </Tooltip>
+                    {/* @ts-ignore */ /* This is needed due to bug in vienna-ui */}
+                    <Tooltip content={'Отменить заказ'} anchor={'top'}>
                         <Button onClick={() => setIsOpen(true)} square design={'critical'}><Cancel/></Button>
                     </Tooltip>
                 </Groups>
+                <Groups design={'horizontal'} style={{marginTop: "10px", borderTop: '1px solid lightgray', paddingTop: '10px'}} justifyContent={'center'}>
+                    {'Включить фискализацию'}
+                    <Switch onColor={'#FFCC00'} onChange={() => {
+                        setHasReceipt(!hasReceipt)
+                        if (!receipt) {
+                            setSum('')
+                            setEdit(false)
+                            setReceipt( [{...defaultReceiptItem}])
+                        }
+                    }} checked={hasReceipt} checkedIcon={false} uncheckedIcon={false}/>
+                </Groups>
             </Groups>
           </Card>
+          {
+              hasReceipt &&
+              <ReceiptConfigurator edit={edit} setEdit={setEdit} receipt={receipt} setReceipt={setReceipt}/>
+          }
           <Modal isOpen={isOpen}>
               <Card.ContentTitle style={{margin: '20px 0 0 20px', fontSize: '16px'}} >Подтвердите действие</Card.ContentTitle>
               <div style={{margin: '25px 40px 20px 20px'}}>
