@@ -61,7 +61,7 @@ const QRView = () => {
     useEffect(() => {
         const amount = qrData?.order?.amount
         setSum(`${amount ? amount : ''}`)
-        setEdit(amount !== 0)
+        setEdit(sum !== '')
     }, [qrData])
 
     useEffect(() => {

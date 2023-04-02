@@ -3,7 +3,7 @@ import {QR} from "../types/QR";
 import { Order } from "../types/Order";
 
 export const createQR = (account:  FormDataEntryValue, redirectUrl:  FormDataEntryValue, sbpMerchantId:  FormDataEntryValue) => {
-    return axios.post('/qrs/create', {
+    return axios.post('/qr/create', {
         qrType: 'QRVariable',
         account,
         redirectUrl,
