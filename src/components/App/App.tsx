@@ -1,8 +1,8 @@
-import {Header} from "vienna-ui";
+import {Button, Header} from "vienna-ui";
 import React, {useEffect, useState} from "react";
 import logo from '../../static/logo.jpg';
 import styles from './App.module.css';
-import {Outlet, useNavigate} from "react-router-dom";
+import {Navigate, Outlet, useNavigate} from "react-router-dom";
 
 const App = () => {
     const getCurrentLocation = () => {
@@ -23,30 +23,44 @@ const App = () => {
         setPath(value);
     }
 
+    const handleLogout = () => {
+        localStorage.removeItem('token')
+        navigate('/login')
+    }
+
     useEffect(() => {
-        if (!window.location.pathname.includes(path)) {
+        if (!window.location.pathname.includes(path) && !window.location.pathname.includes('/login')) {
             navigate(path)
         }
     }, [path])
 
-    return (
-        <>
-            <div style={{position: 'fixed', top: 0, left: 0, width: '100vw', backgroundColor: 'white', zIndex: '100'}}>
-                <Header size={'m'} logo={
-                    <img className={styles.logo} alt={'sellable logo'} src={logo}/>
-                }
-                        items={
-                            <Header.Items onChange={handleChange} value={path}>
-                                {items.map(({value, label}) => (
-                                    <Header.Item key={value} value={value} label={label}/>
-                                ))}
-                            </Header.Items>
-                        }
-                />
-            </div>
-            <div style={{width: '100vw', height: '80px'}}></div>
-            <Outlet/>
-        </>
+    return (!localStorage.getItem('token') ? <Navigate to={'/login'}/> :
+            <>
+                <div style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100vw',
+                    backgroundColor: 'white',
+                    zIndex: '100'
+                }}>
+                    <Header size={'m'} logo={
+                        <img className={styles.logo} alt={'sellable logo'} src={logo}/>
+                    }
+                            items={
+                                <Header.Items onChange={handleChange} value={path}>
+                                    {items.map(({value, label}) => (
+                                        <Header.Item key={value} value={value} label={label}/>
+                                    ))}
+                                </Header.Items>
+                            }
+                            action={<div className={styles.logout}><Button onClick={handleLogout}
+                                                                           design={'ghost'}>Выйти</Button></div>}
+                    />
+                </div>
+                <div style={{width: '100vw', height: '80px'}}></div>
+                <Outlet/>
+            </>
     )
 }
 

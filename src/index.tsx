@@ -12,6 +12,7 @@ import OrderSelect, {loader as ordersLoader} from "./components/Orders/OrderSele
 import OrderIndex from "./components/Orders/OrderIndex/OrderIndex";
 import OrderView, {loader as orderLoader} from "./components/Orders/OrderView/OrderView";
 import ReceiptsFinder from "./components/ReceiptsFinder/ReceiptsFinder";
+import Login from "./components/Login/Login";
 
 
 const router = createBrowserRouter([
@@ -60,6 +61,10 @@ const router = createBrowserRouter([
     {
         path: '/receipt',
         element: <ReceiptsFinder/>
+    },
+    {
+        path: '/login',
+        element: <Login/>
     }
 ]);
 

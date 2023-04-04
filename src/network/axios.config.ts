@@ -1,5 +1,4 @@
 import { default as axiosLib } from 'axios';
-import { token } from '../private';
 
 const axios = axiosLib.create({
     baseURL: '/',
@@ -11,7 +10,7 @@ const axios = axiosLib.create({
 });
 
 axios.interceptors.request.use((config) => {
-    config.headers.Authorization = token
+    config.headers.Authorization = localStorage.getItem('token')
     return config;
 });
 
