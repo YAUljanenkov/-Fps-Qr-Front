@@ -9,7 +9,7 @@ import {getQrOrder, getQR, createOrder} from "../../../network/requests";
 import Switch from 'react-switch';
 import {ReceiptItem} from "../../../types/ReceiptItem";
 import ReceiptConfigurator from './ReceiptConfigurator/ReceiptConfigurator';
-import {handleFloat, restoreFloat} from "../../App/App";
+import {handleFloat, restoreFloat} from "../../../utils";
 
 export async function stopAction({request, params}: ActionFunctionArgs) {
     console.log('called!')
@@ -60,8 +60,9 @@ const QRView = () => {
 
     useEffect(() => {
         const amount = qrData?.order?.amount
-        setSum(`${amount ? amount : ''}`)
-        setEdit(sum !== '')
+        let newSum = `${amount ? amount : ''}`;
+        setSum(newSum)
+        setEdit(newSum !== '')
     }, [qrData])
 
     useEffect(() => {

@@ -11,6 +11,7 @@ import Index from './components/QRs/Index/Index';
 import OrderSelect, {loader as ordersLoader} from "./components/Orders/OrderSelect/OrderSelect";
 import OrderIndex from "./components/Orders/OrderIndex/OrderIndex";
 import OrderView, {loader as orderLoader} from "./components/Orders/OrderView/OrderView";
+import ReceiptsFinder from "./components/ReceiptsFinder/ReceiptsFinder";
 
 
 const router = createBrowserRouter([
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
                 ]
             }
         ]
+    },
+    {
+        path: '/receipt',
+        element: <ReceiptsFinder/>
     }
 ]);
 

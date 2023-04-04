@@ -4,8 +4,8 @@ import {Add, Trash} from 'vienna.icons';
 import React, {FormEvent, useEffect, useState} from "react";
 import styles from './ReceiptConfigurator.module.css';
 import {ReceiptItem} from "../../../../types/ReceiptItem";
-import {handleFloat, restoreFloat} from "../../../App/App";
 import {defaultReceiptItem} from "../QRView";
+import {handleFloat, restoreFloat} from "../../../../utils";
 
 interface ReceiptConfiguratorProps {
     receipt: ReceiptItem[] | undefined,

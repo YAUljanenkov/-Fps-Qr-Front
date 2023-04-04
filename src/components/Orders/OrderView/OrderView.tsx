@@ -3,11 +3,11 @@ import {Card, Grid} from "vienna-ui";
 import classNames from "classnames";
 import styles from './OrderView.module.css';
 import {LoaderFunctionArgs, useLoaderData} from "react-router-dom";
-import {parsedDate} from '../OrderSelect/OrderSelect';
-import { Order } from "../../../types/Order";
+import {Order} from "../../../types/Order";
 import {getOrder} from "../../../network/requests";
+import {parsedDate} from "../../../utils";
 
-export async function loader({ params }: LoaderFunctionArgs): Promise<Order | null>  {
+export async function loader({params}: LoaderFunctionArgs): Promise<Order | null> {
     if (!params.orderId) {
         return null;
     }
@@ -20,9 +20,9 @@ export async function loader({ params }: LoaderFunctionArgs): Promise<Order | nu
     }
 }
 
-const OrderView = () =>  {
+const OrderView = () => {
     const order = useLoaderData() as Order | null;
-    return(
+    return (
         <Card className={styles.card}>
             <div className={styles.cardContent}>
                 <b className={styles.payInfo}>{order?.amount.toFixed(2)}₽</b>
@@ -31,7 +31,7 @@ const OrderView = () =>  {
                     <Grid.Col size={4}>
                         <b>id</b>
                     </Grid.Col>
-                    <Grid.Col size={8}>
+                    <Grid.Col size={8} className={styles.col}>
                         {order?.id}
                     </Grid.Col>
                 </Grid.Row>
@@ -39,7 +39,7 @@ const OrderView = () =>  {
                     <Grid.Col size={4}>
                         <b>QR ID</b>
                     </Grid.Col>
-                    <Grid.Col size={8}>
+                    <Grid.Col size={8} className={styles.col}>
                         {order?.qr.id}
                     </Grid.Col>
                 </Grid.Row>
@@ -47,15 +47,15 @@ const OrderView = () =>  {
                     <Grid.Col size={4}>
                         <b>Cтатус</b>
                     </Grid.Col>
-                    <Grid.Col size={8}>
+                    <Grid.Col size={8} className={styles.col}>
                         {order?.status.value}
                     </Grid.Col>
                 </Grid.Row>
                 <Grid.Row className={classNames(styles.row, styles.rowBorder)}>
-                    <Grid.Col size={4}>
+                    <Grid.Col size={4} className={styles.col}>
                         <b>Валиден до</b>
                     </Grid.Col>
-                    <Grid.Col size={8}>
+                    <Grid.Col size={8} className={styles.col}>
                         {parsedDate(order?.expirationDate ?? "")}
                     </Grid.Col>
                 </Grid.Row>

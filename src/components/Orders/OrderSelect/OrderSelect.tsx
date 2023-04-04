@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
 import styles from './OrderSelect.module.css';
 import {Link, Outlet, useLoaderData} from "react-router-dom";
-import {Grid, Sidebar, H5} from 'vienna-ui';
+import {Grid, H5, Sidebar} from 'vienna-ui';
 import {Invoice1} from 'vienna.icons';
 import {Order} from "../../../types/Order";
 import {getOrders} from "../../../network/requests";
+import {parsedDate} from "../../../utils";
 
 export async function loader(): Promise<Order[]>  {
     try {
@@ -14,11 +15,6 @@ export async function loader(): Promise<Order[]>  {
         console.error(error);
         return [];
     }
-}
-
-export const parsedDate = (date: string) => {
-    const parsedDate = new Date(Date.parse(date));
-    return `${parsedDate.toLocaleDateString('ru-RU')} ${parsedDate.toLocaleTimeString('ru-RU')}`
 }
 
 const OrderSelect = () => {

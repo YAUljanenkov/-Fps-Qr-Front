@@ -30,3 +30,7 @@
 .rowBorder {
     border-top: 1px solid #dedede;
 }
+
+.col {
+    overflow-x: auto;
+}

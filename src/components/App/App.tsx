@@ -4,25 +4,6 @@ import logo from '../../static/logo.jpg';
 import styles from './App.module.css';
 import {Outlet, useNavigate} from "react-router-dom";
 
-export function handleFloat(number: string, integerSize: number, floatSize: number): string {
-    number = number.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1')
-    let numParts = number.split('.');
-    if (numParts.length === 2) {
-        return `${numParts[0].slice(0, integerSize)}.${numParts[1].slice(0, floatSize)}`;
-    } else if (number.includes('.')) {
-        return number.slice(0, integerSize + 1);
-    } else {
-        return number.slice(0, integerSize);
-    }
-}
-
-export function restoreFloat(num: string): number {
-    if(num[num.length] === '.') {
-        return Number(num.slice(0, num.length - 1));
-    }
-    return Number(num);
-}
-
 const App = () => {
     const getCurrentLocation = () => {
         if (window.location.pathname.includes('/orders')) {
