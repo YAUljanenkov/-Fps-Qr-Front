@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Groups, Button, Card, Input, Tooltip, Modal, H5} from 'vienna-ui';
 import styles from './QRView.module.css';
-import {Edit, Cancel, InfoFilled} from "vienna.icons";
+import {Edit, Cancel, InfoFilled, Printer, Download} from "vienna.icons";
 import {LoaderFunctionArgs, useLoaderData, Form, ActionFunctionArgs, redirect} from "react-router-dom";
 import classNames from "classnames";
 import {QR} from "../../../types/QR";
@@ -9,7 +9,7 @@ import {getQrOrder, getQR, createOrder} from "../../../network/requests";
 import Switch from 'react-switch';
 import {ReceiptItem} from "../../../types/ReceiptItem";
 import ReceiptConfigurator from './ReceiptConfigurator/ReceiptConfigurator';
-import {handleFloat, restoreFloat} from "../../../utils";
+import {downloadImage, handleFloat, PrintImage, restoreFloat} from "../../../utils";
 
 export async function stopAction({request, params}: ActionFunctionArgs) {
     console.log('called!')
@@ -96,11 +96,20 @@ const QRView = () => {
         setEdit(true);
     }
 
+    const printCode = () => {
+        if (qrData) {
+            PrintImage(qrData.qrUrl);
+        }
+    }
+
     return (
       <>
           <Card className={classNames(styles.card)}>
             <Groups design={'vertical'} alignItems={'center'} justifyContent={"center"}>
-                <b>{qrData?.qrId}</b>
+                <b>{qrData?.qrId}
+                    <Button style={{top: '3px', left: '5px'}} design={'ghost'} onClick={() => qrData && downloadImage(qrData.qrUrl)}><Download/></Button>
+                    <Button style={{top: '3px'}} design={'ghost'} onClick={printCode}><Printer/></Button>
+                </b>
                 <img
                     className={styles.qrBorder}
                     src={qrData?.qrUrl}

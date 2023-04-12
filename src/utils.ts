@@ -21,3 +21,34 @@ export function restoreFloat(num: string): number {
     }
     return Number(num);
 }
+
+function ImagetoPrint(source: string)
+{
+    return "<html><head><scri"+"pt>function step1(){\n" +
+        "setTimeout('step2()', 10);}\n" +
+        "function step2(){window.print();window.close()}\n" +
+        "</scri" + "pt></head><body onload='step1()'>\n" +
+        "<img src='" + source + "' /></body></html>";
+}
+
+export function PrintImage(source: string)
+{
+    const Pagelink = "about:blank";
+    const pwa = window.open(Pagelink, "_new");
+    pwa?.document.open();
+    pwa?.document.write(ImagetoPrint(source));
+    pwa?.document.close();
+}
+
+export async function downloadImage(imageSrc: string) {
+    const image = await fetch(imageSrc)
+    const imageBlog = await image.blob()
+    const imageURL = URL.createObjectURL(imageBlog)
+
+    const link = document.createElement('a')
+    link.href = imageURL
+    link.download = 'image file name here'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+}

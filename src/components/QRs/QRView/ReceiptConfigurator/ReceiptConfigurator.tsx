@@ -143,7 +143,6 @@ const ReceiptConfigurator = ({receipt, setReceipt, edit, setEdit}: ReceiptConfig
                                   onSelect={(e, d) => handleTaxSelect(e, d, index)}
                               >
                               </Select>
-                              <FormField.Message>Высчитывается автоматически как произведение цены на количество.</FormField.Message>
                           </FormField.Content>
                       </FormField>
                       <hr style={{border: '1px dotted lightgray', margin: '20px 0'}}/>
