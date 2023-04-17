@@ -63,14 +63,32 @@ const OrderView = () => {
                         {order?.status.value}
                     </Grid.Col>
                 </Grid.Row>
-                <Grid.Row className={classNames(styles.row, styles.rowBorder)}>
-                    <Grid.Col size={4} className={styles.col}>
-                        <b>Валиден до</b>
-                    </Grid.Col>
-                    <Grid.Col size={8} className={styles.col}>
-                        {parsedDate(order?.expirationDate ?? "")}
-                    </Grid.Col>
-                </Grid.Row>
+                { order?.status.value === 'PAID'?
+                    <Grid.Row className={classNames(styles.row, styles.rowBorder)}>
+                        <Grid.Col size={4} className={styles.col}>
+                            <b>Оплачен</b>
+                        </Grid.Col>
+                        <Grid.Col size={8} className={styles.col}>
+                            {parsedDate(order?.last_time_update ?? "")}
+                        </Grid.Col>
+                    </Grid.Row> : order?.status.value === 'CANCELLED'?
+                    <Grid.Row className={classNames(styles.row, styles.rowBorder)}>
+                        <Grid.Col size={4} className={styles.col}>
+                            <b>Отменен</b>
+                        </Grid.Col>
+                        <Grid.Col size={8} className={styles.col}>
+                            {parsedDate(order?.last_time_update ?? "")}
+                        </Grid.Col>
+                    </Grid.Row> :
+                        <Grid.Row className={classNames(styles.row, styles.rowBorder)}>
+                            <Grid.Col size={4} className={styles.col}>
+                                <b>Валиден до</b>
+                            </Grid.Col>
+                            <Grid.Col size={8} className={styles.col}>
+                                {parsedDate(order?.expirationDate ?? "")}
+                            </Grid.Col>
+                        </Grid.Row>
+                }
             </div>
             { order?.receipt &&
                 <div style={{maxWidth: '300px'}}>
