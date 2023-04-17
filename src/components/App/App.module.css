@@ -5,3 +5,8 @@
     user-select: none;
     cursor: default;
 }
+
+.logout {
+    position: relative;
+    left: -10ch;
+}

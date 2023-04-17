@@ -21,6 +21,19 @@
     font-family: Roboto, Helvetica, "Helvetica New", Arial, sans-serif;
 }
 
+.receiptInfo {
+    font-size: 1.5rem;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: Roboto, Helvetica, "Helvetica New", Arial, sans-serif;
+}
+
+.receiptView {
+    max-width: 200px;
+    margin: 0 auto;
+}
+
 .row {
     /*font-size: 14px;*/
     padding: 12px;
@@ -29,4 +42,8 @@
 
 .rowBorder {
     border-top: 1px solid #dedede;
+}
+
+.col {
+    overflow-x: auto;
 }
