@@ -1,0 +1,47 @@
+.space {
+    padding: 5vw;
+}
+
+.item {
+    border-bottom: 1px solid #ccc;
+}
+
+.itemBtn {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin: 0;
+    padding: 1rem;
+    font-size: 1rem;
+    text-align: left;
+    /*color: #007bff;*/
+    background-color: transparent;
+    border: none;
+}
+
+.itemBtn:hover {
+    background-color: #f3f3f3;
+}
+
+.itemBtnExpanded {
+    background-color: #e7e7e7;
+}
+
+.itemContent {
+    transition: height 0.2s ease-in-out;
+}
+
+.itemPanel {
+    padding: 1rem;
+}
+
+.chevron {
+    margin-left: auto;
+    transition: transform 0.2s ease-in-out;
+    color: gray;
+}
+
+.itemBtnExpanded .chevron {
+    transform: rotate(180deg);
+}
