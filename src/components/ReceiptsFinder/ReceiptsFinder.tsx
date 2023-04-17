@@ -1,5 +1,5 @@
 import React, {FormEvent, useState} from 'react';
-import {Button, Card, FormField, H5, Input} from "vienna-ui";
+import {Button, Card, FormField, Input} from "vienna-ui";
 import styles from './ReceiptsFinder.module.css';
 import {Accordion, AccordionItem as Item, AccordionItemProps} from '@szhsin/react-accordion';
 import {Down} from 'vienna.icons';

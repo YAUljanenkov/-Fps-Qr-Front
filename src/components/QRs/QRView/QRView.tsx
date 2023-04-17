@@ -2,18 +2,25 @@ import React, {useEffect, useState} from 'react';
 import {Groups, Button, Card, Input, Tooltip, Modal, H5} from 'vienna-ui';
 import styles from './QRView.module.css';
 import {Edit, Cancel, InfoFilled, Printer, Download} from "vienna.icons";
-import {LoaderFunctionArgs, useLoaderData, Form, ActionFunctionArgs, redirect} from "react-router-dom";
+import {LoaderFunctionArgs, useLoaderData, Form, ActionFunctionArgs, redirect, useNavigate} from "react-router-dom";
 import classNames from "classnames";
 import {QR} from "../../../types/QR";
-import {getQrOrder, getQR, createOrder} from "../../../network/requests";
+import {getQrOrder, getQR, createOrder, saveReceipt, cancelOrder, getReceipt} from "../../../network/requests";
 import Switch from 'react-switch';
 import {ReceiptItem} from "../../../types/ReceiptItem";
 import ReceiptConfigurator from './ReceiptConfigurator/ReceiptConfigurator';
-import {downloadImage, handleFloat, PrintImage, restoreFloat} from "../../../utils";
+import {countFinalSum, downloadImage, handleFloat, PrintImage, restoreFloat} from "../../../utils";
+import {Order} from "../../../types/Order";
 
 export async function stopAction({request, params}: ActionFunctionArgs) {
-    console.log('called!')
-    console.log(params.orderId);
+    if (params.orderId) {
+        try {
+            await cancelOrder(params.orderId);
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
     return redirect(request.url.replace(`/stop/${params.orderId}`, ''));
 }
 
@@ -38,6 +45,16 @@ export async function loader({ params }: LoaderFunctionArgs): Promise<QR | null>
         console.error(e);
     }
 
+    if (qrData?.order?.receiptNumber) {
+        try {
+            const responseReceipt = await getReceipt(qrData.order.receiptNumber);
+            qrData.order.receipt = await responseReceipt.data;
+            console.log(qrData.order.receipt);
+        } catch (e) {
+            console.error(e);
+        }
+    }
+    console.log(qrData.order);
     return qrData;
 }
 
@@ -55,13 +72,16 @@ const QRView = () => {
     const [load, setLoad] = useState(false);
     const [edit, setEdit] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
-    const [hasReceipt, setHasReceipt] = useState(false);
-    const [receipt, setReceipt] = useState<ReceiptItem[] | undefined>(undefined);
+    const [hasReceipt, setHasReceipt] = useState<boolean>(qrData?.order?.receipt !== undefined);
+    const [receipt, setReceipt] = useState<ReceiptItem[] | undefined>(qrData?.order?.receipt?.items ?? undefined);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const amount = qrData?.order?.amount
         let newSum = `${amount ? amount : ''}`;
         setSum(newSum)
+        setHasReceipt(qrData?.order?.receipt !== undefined);
+        setReceipt(qrData?.order?.receipt?.items ?? undefined)
         setEdit(newSum !== '')
     }, [qrData])
 
@@ -74,32 +94,47 @@ const QRView = () => {
         }
     }, [receipt, hasReceipt])
 
-    const setQr = async () => {
+    const setQr = async (): Promise<Order | null> => {
         if (!qrData?.qrId) {
             // add error alert.
-            return;
+            return null;
         }
 
         if(edit) {
             setEdit(false);
-            return;
+            return null;
         }
 
         setLoad(true);
+        let order: Order | null = null;
         try {
-            await createOrder(restoreFloat(sum), qrData?.qrId)
+            order = await (await createOrder(restoreFloat(sum), qrData?.qrId)).data
         } catch (e) {
             console.error(e);
         }
 
         setLoad(false);
         setEdit(true);
+        return order;
     }
 
     const printCode = () => {
         if (qrData) {
             PrintImage(qrData.qrUrl);
         }
+    }
+
+    const createOrderReceipt = async () => {
+        if(edit) {
+            setEdit(false);
+            return;
+        }
+
+        let order = await setQr();
+        if (order && receipt) {
+            await saveReceipt(order.id, {items: receipt, total: countFinalSum(receipt)});
+        }
+        navigate(window.location.pathname);
     }
 
     return (
@@ -128,7 +163,7 @@ const QRView = () => {
                     </Tooltip>
                     {/* @ts-ignore */ /* This is needed due to bug in vienna-ui */}
                     <Tooltip content={'Отменить заказ'} anchor={'top'}>
-                        <Button onClick={() => setIsOpen(true)} square design={'critical'}><Cancel/></Button>
+                        <Button disabled={sum === ''} onClick={() => setIsOpen(true)} square design={'critical'}><Cancel/></Button>
                     </Tooltip>
                 </Groups>
                 <Groups design={'horizontal'} style={{marginTop: "10px", borderTop: '1px solid lightgray', paddingTop: '10px'}} justifyContent={'center'}>
@@ -146,7 +181,7 @@ const QRView = () => {
           </Card>
           {
               hasReceipt &&
-              <ReceiptConfigurator edit={edit} setEdit={setEdit} receipt={receipt} setReceipt={setReceipt}/>
+              <ReceiptConfigurator sendRequest={createOrderReceipt} edit={edit} setEdit={setEdit} receipt={receipt} setReceipt={setReceipt} load={load}/>
           }
           <Modal isOpen={isOpen}>
               <Card.ContentTitle style={{margin: '20px 0 0 20px', fontSize: '16px'}} >Подтвердите действие</Card.ContentTitle>

@@ -25,7 +25,7 @@ export const getQRs = (offset= 0, limit: number | null = null) => {
 export const getQR = (qrId: string) => axios.get<QR>(`/qr/${qrId}`);
 
 export const createOrder = (amount: number, id: string) => {
-    return axios.post('/order/create', {
+    return axios.post<Order>('/order/create', {
         amount,
         qr: {
             id

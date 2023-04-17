@@ -1,26 +1,29 @@
 import classNames from "classnames";
 import {Button, Card, FormField, Groups, Input, Select, Tooltip} from "vienna-ui";
-import {Add, Trash} from 'vienna.icons';
+import {Add, Edit, Trash} from 'vienna.icons';
 import React, {FormEvent, useEffect, useState} from "react";
 import styles from './ReceiptConfigurator.module.css';
 import {ReceiptItem} from "../../../../types/ReceiptItem";
 import {defaultReceiptItem} from "../QRView";
-import {handleFloat, restoreFloat} from "../../../../utils";
+import {countFinalSum, handleFloat, restoreFloat} from "../../../../utils";
 
 interface ReceiptConfiguratorProps {
     receipt: ReceiptItem[] | undefined,
     edit: boolean
     setEdit: (arg: boolean) => void
-    setReceipt: (arg: ReceiptItem[] | undefined) => void
+    setReceipt: (arg: ReceiptItem[] | undefined) => void,
+    sendRequest: () => void,
+    load: boolean
 }
 
-const ReceiptConfigurator = ({receipt, setReceipt, edit, setEdit}: ReceiptConfiguratorProps) => {
+const ReceiptConfigurator = ({receipt, setReceipt, edit, load, sendRequest}: ReceiptConfiguratorProps) => {
     const taxOptions = [{ value: 'NONE', text: 'Без НДС' }, { value: 'VAT0', text: '0%' }, { value: 'VAT10', text: '10%' }, { value: 'VAT110', text: '10/110' }, { value: 'VAT20', text: '20%' }, { value: 'VAT120', text: '20/120' }]
     const [filled, setFilled] = useState(false);
 
     useEffect(() => {
         checkFilled();
     }, [receipt])
+
     const handleNameChange = (changedIndex: number, e: FormEvent<HTMLElement>) => {
         setReceipt(receipt?.map((item, index) => {
             if(index === changedIndex) {
@@ -77,10 +80,6 @@ const ReceiptConfigurator = ({receipt, setReceipt, edit, setEdit}: ReceiptConfig
         else {
             setReceipt([newItem])
         }
-    }
-
-    const countFinalSum = () => {
-      return (receipt?.length ?? 0) > 0 ? receipt?.map(elem => elem.amount)?.reduce((prev, curr) => prev + curr) : 0
     }
 
     const checkFilled = () => {
@@ -151,7 +150,7 @@ const ReceiptConfigurator = ({receipt, setReceipt, edit, setEdit}: ReceiptConfig
           }
           <Groups design={'vertical'}>
               <Groups design={'horizontal'} justifyContent={'flex-end'}>
-                  <span>{`Итого: ${countFinalSum()??'0'}`}<b>₽</b></span>
+                  <span>{`Итого: ${(receipt && countFinalSum(receipt)) ??'0'}`}<b>₽</b></span>
               </Groups>
               <Groups design={'horizontal'} justifyContent={'space-between'}>
                   <Button design={'primary'} onClick={addItem}>
@@ -159,8 +158,8 @@ const ReceiptConfigurator = ({receipt, setReceipt, edit, setEdit}: ReceiptConfig
                   </Button>
                   {/*@ts-ignore*/}
                   <Tooltip anchor={'top'} content={filled? 'Нажмите для создания заказа': 'Заполните все поля'}>
-                      <Button design={'accent'} disabled={!filled}>
-                          Отправить
+                      <Button loading={load} design={'accent'} disabled={!filled} onClick={sendRequest}>
+                          {edit? <Edit/> : 'Отправить'}
                       </Button>
                   </Tooltip>
               </Groups>
