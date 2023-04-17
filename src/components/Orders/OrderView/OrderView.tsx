@@ -10,6 +10,7 @@ import ReceiptView from "../../ReceiptView/ReceiptView";
 
 export async function loader({params}: LoaderFunctionArgs): Promise<Order | null> {
     let order: Order | null = null;
+
     if (!params.orderId) {
         return null;
     }
@@ -34,6 +35,11 @@ export async function loader({params}: LoaderFunctionArgs): Promise<Order | null
 
 const OrderView = () => {
     const order = useLoaderData() as Order | null;
+    let statusName = {
+        'NEW': 'Новый',
+        'PAID': 'Оплачен',
+        'CANCELED': 'Отменен'
+    }
     return (
         <Card className={styles.card}>
             <div className={styles.cardContent}>
@@ -60,21 +66,22 @@ const OrderView = () => {
                         <b>Cтатус</b>
                     </Grid.Col>
                     <Grid.Col size={8} className={styles.col}>
-                        {order?.status.value}
+                        {/*@ts-ignore*/}
+                        {statusName[order?.status.value]}
                     </Grid.Col>
                 </Grid.Row>
                 { order?.status.value === 'PAID'?
                     <Grid.Row className={classNames(styles.row, styles.rowBorder)}>
                         <Grid.Col size={4} className={styles.col}>
-                            <b>Оплачен</b>
+                            <b>Дата оплаты</b>
                         </Grid.Col>
                         <Grid.Col size={8} className={styles.col}>
                             {parsedDate(order?.last_time_update ?? "")}
                         </Grid.Col>
-                    </Grid.Row> : order?.status.value === 'CANCELLED'?
+                    </Grid.Row> : order?.status.value === 'CANCELED'?
                     <Grid.Row className={classNames(styles.row, styles.rowBorder)}>
                         <Grid.Col size={4} className={styles.col}>
-                            <b>Отменен</b>
+                            <b>Дата отмены</b>
                         </Grid.Col>
                         <Grid.Col size={8} className={styles.col}>
                             {parsedDate(order?.last_time_update ?? "")}
@@ -91,7 +98,7 @@ const OrderView = () => {
                 }
             </div>
             { order?.receipt &&
-                <div style={{maxWidth: '300px'}}>
+                <div style={{maxWidth: '300px', margin: '0 auto'}}>
                     <Card.ContentTitle>Cписок товаров</Card.ContentTitle>
                     <ReceiptView receipt={order.receipt}/>
                 </div>
