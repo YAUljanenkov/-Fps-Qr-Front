@@ -103,7 +103,7 @@ const ReceiptConfigurator = ({receipt, setReceipt, edit, load, sendRequest}: Rec
           {
               receipt?.map((item, index) =>
                   <div key={index}>
-                      <Card.ContentTitle style={{marginTop: '10px'}}>Позиция {index + 1} <Trash className={styles.trash} onClick={() => deleteItem(index)}/></Card.ContentTitle>
+                      <Card.ContentTitle style={{marginTop: '10px'}}>Позиция {index + 1} <Button design={'ghost'} disabled={edit} className={styles.trash} onClick={() => deleteItem(index)}><Trash/></Button> </Card.ContentTitle>
                       <FormField style={{marginTop: '10px'}}>
                           <FormField.Label>Название позиции</FormField.Label>
                           <FormField.Content>
@@ -153,7 +153,7 @@ const ReceiptConfigurator = ({receipt, setReceipt, edit, load, sendRequest}: Rec
                   <span>{`Итого: ${(receipt && countFinalSum(receipt)) ??'0'}`}<b>₽</b></span>
               </Groups>
               <Groups design={'horizontal'} justifyContent={'space-between'}>
-                  <Button design={'primary'} onClick={addItem}>
+                  <Button disabled={edit} design={'primary'} onClick={addItem}>
                       Добавить <Add/>
                   </Button>
                   {/*@ts-ignore*/}

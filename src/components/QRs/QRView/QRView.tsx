@@ -70,7 +70,7 @@ const QRView = () => {
     const qrData = useLoaderData() as QR | null;
     const [sum, setSum] = useState('');
     const [load, setLoad] = useState(false);
-    const [edit, setEdit] = useState(false);
+    const [edit, setEdit] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState(false);
     const [hasReceipt, setHasReceipt] = useState<boolean>(qrData?.order?.receipt !== undefined);
     const [receipt, setReceipt] = useState<ReceiptItem[] | undefined>(qrData?.order?.receipt?.items ?? undefined);

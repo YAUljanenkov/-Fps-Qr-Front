@@ -98,8 +98,8 @@ const OrderView = () => {
                 }
             </div>
             { order?.receipt &&
-                <div style={{maxWidth: '300px', margin: '0 auto'}}>
-                    <Card.ContentTitle>Cписок товаров</Card.ContentTitle>
+                <div className={styles.receiptView}>
+                    <b className={styles.receiptInfo}>Cписок товаров</b>
                     <ReceiptView receipt={order.receipt}/>
                 </div>
             }
