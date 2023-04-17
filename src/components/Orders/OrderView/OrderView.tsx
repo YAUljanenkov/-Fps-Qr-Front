@@ -4,20 +4,32 @@ import classNames from "classnames";
 import styles from './OrderView.module.css';
 import {LoaderFunctionArgs, useLoaderData} from "react-router-dom";
 import {Order} from "../../../types/Order";
-import {getOrder} from "../../../network/requests";
+import {getOrder, getReceipt} from "../../../network/requests";
 import {parsedDate} from "../../../utils";
+import ReceiptView from "../../ReceiptView/ReceiptView";
 
 export async function loader({params}: LoaderFunctionArgs): Promise<Order | null> {
+    let order: Order | null = null;
     if (!params.orderId) {
         return null;
     }
     try {
         const responseOrder = await getOrder(params.orderId);
-        return await responseOrder.data;
+        order =  await responseOrder.data;
     } catch (e) {
         console.log(e);
         return null;
     }
+
+    if (order?.receiptNumber) {
+        try {
+            const responseReceipt = await getReceipt(order.receiptNumber);
+            order.receipt = await responseReceipt.data;
+        } catch (e) {
+            console.log(e);
+        }
+    }
+    return order;
 }
 
 const OrderView = () => {
@@ -60,6 +72,13 @@ const OrderView = () => {
                     </Grid.Col>
                 </Grid.Row>
             </div>
+            { order?.receipt &&
+                <div style={{maxWidth: '300px'}}>
+                    <Card.ContentTitle>Cписок товаров</Card.ContentTitle>
+                    <ReceiptView receipt={order.receipt}/>
+                </div>
+            }
+
         </Card>
     )
 }

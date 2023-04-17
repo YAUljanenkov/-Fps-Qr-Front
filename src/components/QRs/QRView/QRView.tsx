@@ -13,9 +13,10 @@ import {countFinalSum, downloadImage, handleFloat, PrintImage, restoreFloat} fro
 import {Order} from "../../../types/Order";
 
 export async function stopAction({request, params}: ActionFunctionArgs) {
-    if (params.orderId) {
+    if (params.qrId) {
         try {
-            await cancelOrder(params.orderId);
+            let order = await (await getQrOrder(params.qrId)).data
+            await cancelOrder(order.id);
         } catch (e) {
             console.error(e);
         }
@@ -37,24 +38,23 @@ export async function loader({ params }: LoaderFunctionArgs): Promise<QR | null>
         console.error(e);
         return null;
     }
-
-    try {
-        const responseOrder = await getQrOrder(params.qrId);
-        qrData.order = await responseOrder.data;
-    } catch (e) {
-        console.error(e);
+    if (qrData.qrStatus === 'NEW') {
+        try {
+            const responseOrder = await getQrOrder(params.qrId);
+            qrData.order = await responseOrder.data;
+        } catch (e) {
+            console.error(e);
+        }
     }
 
     if (qrData?.order?.receiptNumber) {
         try {
             const responseReceipt = await getReceipt(qrData.order.receiptNumber);
             qrData.order.receipt = await responseReceipt.data;
-            console.log(qrData.order.receipt);
         } catch (e) {
             console.error(e);
         }
     }
-    console.log(qrData.order);
     return qrData;
 }
 
@@ -199,7 +199,7 @@ const QRView = () => {
                           style={{paddingTop: '5px'}}
                           justifyContent={'flex-end'}>
                           <Button size={'l'} design={'ghost'} onClick={() => setIsOpen(false)}>Нет</Button>
-                          <Form action={`stop/${qrData?.order?.id}`} method={'delete'} onSubmit={() => setIsOpen(false)}>
+                          <Form action={`stop/${qrData?.qrId}`} method={'delete'} onSubmit={() => setIsOpen(false)}>
                               <Button type={'submit'} size={'s'}>Да</Button>
                           </Form>
                       </Groups>

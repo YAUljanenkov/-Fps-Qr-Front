@@ -32,7 +32,7 @@ const router = createBrowserRouter([
                         loader: qrLoader,
                         children: [
                             {
-                                path: 'stop/:orderId',
+                                path: 'stop/:qrId',
                                 action: stopAction
                             }
                         ]
