@@ -1,58 +1,31 @@
 import React, {useState} from 'react';
 import styles from './OrderSelect.module.css';
 import {Link, Outlet, useLoaderData} from "react-router-dom";
-import {Grid, Sidebar, H5} from 'vienna-ui';
+import {Grid, H5, Sidebar} from 'vienna-ui';
 import {Invoice1} from 'vienna.icons';
-import {token} from '../../../private';
-
-export interface Order {
-    id: string,
-    amount: number,
-    comment: string,
-    extra: {
-        apiClient: string,
-        apiClientVersion: string
-    },
-    status: {
-        value: string,
-        date: string
-    },
-    expirationDate: string,
-    qr: {
-        id: string,
-        additionalInfo: string,
-        paymentDetails: string
-    }
-}
+import {Order} from "../../../types/Order";
+import {getOrders} from "../../../network/requests";
+import {parsedDate} from "../../../utils";
 
 export async function loader(): Promise<Order[]>  {
     try {
-        const response = await fetch("/order", {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json;charset=utf-8',
-                'Authorization': token
-            }
-        })
-
-        if (!response.ok) {
-            return [];
-        }
-
-        return response.json();
-    } catch (e) {
+        const response = await getOrders();
+        return response.data;
+    } catch (error) {
+        console.error(error);
         return [];
     }
 }
 
-export const parsedDate = (date: string) => {
-    const parsedDate = new Date(Date.parse(date));
-    return `${parsedDate.toLocaleDateString('ru-RU')} ${parsedDate.toLocaleTimeString('ru-RU')}`
-}
-
 const OrderSelect = () => {
+    const getActiveOrder = () => {
+        let path = window.location.pathname
+        let order = path.substring(path.lastIndexOf('/') + 1)
+        return order? order : null;
+    }
+
     const orders = useLoaderData() as Order[];
-    const [activeOrder, setActiveOrder] = useState<string | null>(null);
+    const [activeOrder, setActiveOrder] = useState<string | null>(getActiveOrder());
 
     return (
         <>

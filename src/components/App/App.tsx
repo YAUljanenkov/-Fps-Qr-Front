@@ -1,40 +1,66 @@
-import {Header} from "vienna-ui";
-import React, {useEffect} from "react";
+import {Button, Header} from "vienna-ui";
+import React, {useEffect, useState} from "react";
 import logo from '../../static/logo.jpg';
 import styles from './App.module.css';
-import {Outlet, useNavigate} from "react-router-dom";
+import {Navigate, Outlet, useNavigate} from "react-router-dom";
 
 const App = () => {
-    const navigate = useNavigate();
+    const getCurrentLocation = () => {
+        if (window.location.pathname.includes('/orders')) {
+            return '/orders';
+        }
+        return '/qrs';
+    }
+
     const items = [
         {value: '/qrs', label: 'Метки'},
         {value: '/orders', label: 'Платежи'},
     ];
-    const [state, setState] = React.useState(window.location.pathname === '/' ?
-        {value: '/qrs'} : {value: window.location.pathname});
+
+    const [path, setPath] = useState<string>(getCurrentLocation());
+    const navigate = useNavigate();
     const handleChange = (e: React.FormEvent, value: string) => {
-        setState({value});
+        setPath(value);
+    }
+
+    const handleLogout = () => {
+        localStorage.removeItem('token')
+        navigate('/login')
     }
 
     useEffect(() => {
-        navigate(state.value)
-    }, [state.value])
+        if (!window.location.pathname.includes(path) && !window.location.pathname.includes('/login')) {
+            navigate(path)
+        }
+    }, [path])
 
-    return (
-        <>
-            <Header size={'m'} logo={
-                <img className={styles.logo} alt={'sellable logo'} src={logo}/>
-            }
-                    items={
-                        <Header.Items onChange={handleChange} value={state.value}>
-                            {items.map(({value, label}) => (
-                                <Header.Item key={value} value={value} label={label}/>
-                            ))}
-                        </Header.Items>
+    return (!localStorage.getItem('token') ? <Navigate to={'/login'}/> :
+            <>
+                <div style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100vw',
+                    backgroundColor: 'white',
+                    zIndex: '100'
+                }}>
+                    <Header size={'m'} logo={
+                        <img className={styles.logo} alt={'sellable logo'} src={logo}/>
                     }
-            />
-            <Outlet/>
-        </>
+                            items={
+                                <Header.Items onChange={handleChange} value={path}>
+                                    {items.map(({value, label}) => (
+                                        <Header.Item key={value} value={value} label={label}/>
+                                    ))}
+                                </Header.Items>
+                            }
+                            action={<div className={styles.logout}><Button onClick={handleLogout}
+                                                                           design={'ghost'}>Выйти</Button></div>}
+                    />
+                </div>
+                <div style={{width: '100vw', height: '80px'}}></div>
+                <Outlet/>
+            </>
     )
 }
 
