@@ -1,3 +1,5 @@
+import {ReceiptItem} from "./types/ReceiptItem";
+
 export const parsedDate = (date: string) => {
     const parsedDate = new Date(Date.parse(date));
     return `${parsedDate.toLocaleDateString('ru-RU')} ${parsedDate.toLocaleTimeString('ru-RU')}`
@@ -51,4 +53,8 @@ export async function downloadImage(imageSrc: string) {
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
+}
+
+export const countFinalSum = (receipt: ReceiptItem[]) => {
+    return (receipt?.length ?? 0) > 0 ? receipt?.map(elem => elem.amount)?.reduce((prev, curr) => prev + curr) : 0
 }

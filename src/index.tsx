@@ -5,7 +5,7 @@ import QRSelect, {loader as qrsLoader} from "./components/QRs/QRSelect/QRSelect"
 import reportWebVitals from './reportWebVitals';
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import QRView, {loader as qrLoader, stopAction} from "./components/QRs/QRView/QRView";
-import {createAction} from "./components/QRs/QRCreate/QRCreate";
+import {addAction, createAction} from "./components/QRs/QRCreate/QRCreate";
 import App from "./components/App/App";
 import Index from './components/QRs/Index/Index';
 import OrderSelect, {loader as ordersLoader} from "./components/Orders/OrderSelect/OrderSelect";
@@ -40,6 +40,10 @@ const router = createBrowserRouter([
                     {
                         path: 'create',
                         action: createAction
+                    },
+                    {
+                        path: 'add',
+                        action: addAction
                     }
                 ]
             },

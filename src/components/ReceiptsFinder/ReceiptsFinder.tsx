@@ -1,11 +1,12 @@
 import React, {FormEvent, useState} from 'react';
-import {Button, Card, FormField, Input} from "vienna-ui";
+import {Button, Card, FormField, H5, Input} from "vienna-ui";
 import styles from './ReceiptsFinder.module.css';
 import {Accordion, AccordionItem as Item, AccordionItemProps} from '@szhsin/react-accordion';
 import {Down} from 'vienna.icons';
 import {Receipt} from "../../types/Receipt";
 import ReceiptView from "../ReceiptView/ReceiptView";
 import {parsedDate} from "../../utils";
+import {getOrders, getReceipt} from "../../network/requests";
 
 const ReceiptsFinder = () => {
     const [receipts, setReceipts] = useState<Receipt[] | null>(null);
@@ -16,49 +17,23 @@ const ReceiptsFinder = () => {
         setPhone(number);
     }
 
-    const sendPhone = () => {
-        let receipts: Receipt[] = [
-            {
-                items: [
-                    {
-                        name: 'Салат горький с солью',
-                        quantity: '1.45',
-                        price: '20.1',
-                        amount: 29.15,
-                        vatType: 'VAT20'
-                    },
-                    {
-                        name: 'Маца иерусалимская',
-                        quantity: '150',
-                        price: '5',
-                        amount: 750,
-                        vatType: 'VAT20'
-                    }
-                ],
-                total: 779.15,
-                date: '2023/04/05 19:30'
-            },
-            {
-                items: [
-                    {
-                        name: 'Macbook pro 13 2020',
-                        quantity: '1',
-                        price: '175000',
-                        amount: 175000,
-                        vatType: 'VAT20'
-                    },
-                    {
-                        name: 'Переходник USB-C на HDMI',
-                        quantity: '1',
-                        price: '2000',
-                        amount: 2000,
-                        vatType: 'VAT20'
-                    }
-                ],
-                total: 177000,
-                date: '2020/08/12 14:43'
+    const sendPhone = async () => {
+        let receipts: Receipt[] = []
+        try {
+            const orderResponse = await getOrders(0, null, phone)
+            const orders = orderResponse.data;
+            for (const order of orders) {
+                if (order.receiptNumber) {
+                    const receiptResponse = await getReceipt(order.receiptNumber);
+                    const receipt = receiptResponse.data;
+                    receipt.date = order.last_time_update;
+                    receipts.push(receipt);
+                }
             }
-        ]
+        } catch (e) {
+            console.error(e);
+        }
+
         setReceipts(receipts);
     }
 
@@ -78,7 +53,7 @@ const ReceiptsFinder = () => {
                 </FormField.Content>
             </FormField>
             {
-                receipts && <>
+                receipts && (receipts.length > 0 ? <>
                     <Card.ContentTitle>Списки покупок</Card.ContentTitle>
                     <Accordion transition transitionTimeout={200}>
                         {
@@ -89,7 +64,7 @@ const ReceiptsFinder = () => {
                             )
                         }
                     </Accordion>
-                </>
+                </> : <Card.ContentTitle>Покупки не найдены</Card.ContentTitle>)
             }
 
         </div>

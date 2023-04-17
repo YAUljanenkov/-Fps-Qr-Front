@@ -6,7 +6,17 @@ export interface Receipt {
     status?: Status,
     items: ReceiptItem[],
     date?: string
-    total: number
+    total: number,
+    client?: {
+        email: string,
+        name: string
+    },
+    payments?: [
+        {
+            type: string,
+            amount: number
+        }
+    ],
 }
 
 type ReceiptType = "SELL" | "REFUND"

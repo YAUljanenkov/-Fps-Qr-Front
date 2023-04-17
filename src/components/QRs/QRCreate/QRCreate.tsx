@@ -3,7 +3,7 @@ import styles from './QRCreate.module.css';
 import {Card, Groups, Input, Button, Modal} from 'vienna-ui';
 import raif_qr from "../../../static/raif_qr.jpg"
 import {ActionFunctionArgs, Form, redirect} from "react-router-dom";
-import {createQR} from "../../../network/requests";
+import {addQR, createQR} from "../../../network/requests";
 
 interface QRCreateProps {
     isOpen: boolean,
@@ -23,6 +23,18 @@ export async function createAction({request}: ActionFunctionArgs) {
     return redirect(window.location.href.replace('create', ''));
 }
 
+export async function addAction({request}: ActionFunctionArgs) {
+    const {qrId} = Object.fromEntries(await request.formData());
+    console.log(qrId);
+    try {
+        await addQR(qrId);
+    } catch (e) {
+        console.error(e);
+    }
+
+    return redirect(window.location.href.replace('add', ''));
+}
+
 const QRCreate: React.FunctionComponent<QRCreateProps> = ({isOpen, setIsOpen}: QRCreateProps) => {
     const [account, setAccount] = useState<string>("");
     const [redirectUrl, setRedirectUrl] = useState<string>("");
@@ -37,15 +49,19 @@ const QRCreate: React.FunctionComponent<QRCreateProps> = ({isOpen, setIsOpen}: Q
                     <Card.ContentTitle className={styles.topBorder}>
                         Или введите ID QR-кода вручную
                     </Card.ContentTitle>
-                    <Groups design={'horizontal'}>
-                        <Input size={'m'} className={styles.inputLength} placeholder='QR ID' value={qrID} onChange={
-                            (e) => {
-                                const value = (e.target as HTMLTextAreaElement).value;
-                                setQRID(value);
-                            }
-                        }/>
-                        <Button size={'m'} disabled={qrID.length === 0}>Сохранить</Button>
-                    </Groups>
+                    <Form method={'post'} action={'/qrs/add'} onSubmit={() => {
+                        setIsOpen(false);
+                    }}>
+                        <Groups design={'horizontal'}>
+                                <Input name={'qrId'} size={'m'} className={styles.inputLength} placeholder='QR ID' value={qrID} onChange={
+                                    (e) => {
+                                        const value = (e.target as HTMLTextAreaElement).value;
+                                        setQRID(value);
+                                    }
+                                }/>
+                                <Button type={'submit'} size={'m'} disabled={qrID.length === 0}>Сохранить</Button>
+                        </Groups>
+                    </Form>
                 </>
             }>
                 <Card.ContentTitle>Cоздайте новый QR-код</Card.ContentTitle>
