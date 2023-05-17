@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Button, Card, FormField, Input} from "vienna-ui";
+import {Button, Card, Flex, FormField, Input, InputPassword, Text} from "vienna-ui";
 import styles from './Login.module.css';
 import logo from '../../static/logo.jpg';
 import {useNavigate} from "react-router-dom";
@@ -19,18 +19,27 @@ const Login = () => {
                   <img width={'125px'} height={'30px'} src={logo} alt="logo" className={styles.logo}/>
                   <h2 className={styles.title}>Вход</h2>
                   <FormField>
-                      <Card.ContentTitle>Вставьте ключ авторизации</Card.ContentTitle>
+                      <FormField.Label required>Введите логин</FormField.Label>
                       <FormField.Content>
-                          <Input placeholder={'Ключ авторизации'} value={token} onChange={(e) => setToken((e.target as HTMLTextAreaElement).value)}/>
-                          <FormField.Message className={styles.label}>Ключ авторизации можно получить в сервисе&nbsp;</FormField.Message>
-                          <a className={styles.link} href={'https://pay.raif.ru/account/#/auth'}>Raif Pay</a>
+                          <Input placeholder={'логин'} />
                       </FormField.Content>
                   </FormField>
-                  <FormField style={{marginTop: '20px'}}>
+                  <FormField className={styles.marginTop10}>
+                      <FormField.Label required>Введите пароль</FormField.Label>
                       <FormField.Content>
-                          <Button onClick={handleLogin} disabled={token === ''} design={'accent'}>Войти</Button>
+                          <InputPassword placeholder={'пароль'} />
                       </FormField.Content>
                   </FormField>
+                  <FormField className={styles.marginTop20}>
+                      <FormField.Content>
+                          <Button onClick={handleLogin} design={'accent'}>Войти</Button>
+                      </FormField.Content>
+                  </FormField>
+                  <Flex center className={styles.marginTop10}>
+                      <Text size={'s'} color={'seattle100'}>Нет аккаунта?&nbsp;
+                          <a className={styles.link} href={'/register'}>Создать</a>
+                      </Text>
+                  </Flex>
               </div>
           </Card>
       </div>

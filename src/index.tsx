@@ -13,6 +13,7 @@ import OrderIndex from "./components/Orders/OrderIndex/OrderIndex";
 import OrderView, {loader as orderLoader} from "./components/Orders/OrderView/OrderView";
 import ReceiptsFinder from "./components/ReceiptsFinder/ReceiptsFinder";
 import Login from "./components/Login/Login";
+import Registration from "./components/Registration/Registration";
 
 
 const router = createBrowserRouter([
@@ -69,6 +70,10 @@ const router = createBrowserRouter([
     {
         path: '/login',
         element: <Login/>
+    },
+    {
+        path: '/register',
+        element: <Registration/>
     }
 ]);
 
