@@ -9,12 +9,16 @@ const App = () => {
         if (window.location.pathname.includes('/orders')) {
             return '/orders';
         }
+        if (window.location.pathname.includes('/settings')) {
+            return '/settings';
+        }
         return '/qrs';
     }
 
     const items = [
         {value: '/qrs', label: 'Метки'},
         {value: '/orders', label: 'Платежи'},
+        {value: '/settings', label: 'Настройки'},
     ];
 
     const [path, setPath] = useState<string>(getCurrentLocation());

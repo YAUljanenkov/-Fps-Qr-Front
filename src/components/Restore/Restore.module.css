@@ -1,0 +1,53 @@
+.space {
+    width: 100vw;
+    height: 100vh;
+    background-image: url(../../static/alps.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loginView {
+    max-width: 25vw;
+    min-width: 300px;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.logo {
+    max-width: 100%;
+    aspect-ratio: initial;
+    margin: 0 auto;
+    opacity: 95%;
+}
+
+.link {
+    text-decoration: inherit;
+    font-family: inherit;
+    color: royalblue;
+    font-size: 12px;
+}
+
+.label {
+    display: inline !important;
+}
+
+.title {
+    font-weight: 800 !important;
+    margin: 15px auto;
+}
+
+.marginTop10 {
+    margin-top: 10px;
+}
+
+.marginTop20 {
+    margin-top: 20px;
+}

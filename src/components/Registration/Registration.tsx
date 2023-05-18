@@ -1,17 +1,9 @@
-import React, {useState} from "react";
+import React from "react";
 import {Button, Card, Flex, FormField, Input, InputPassword, Text} from "vienna-ui";
 import styles from './Registration.module.css';
 import logo from '../../static/logo.jpg';
-import {useNavigate} from "react-router-dom";
 
 const Registration = () => {
-    const [token, setToken] = useState('');
-    const navigate = useNavigate();
-    const handleLogin = () => {
-        localStorage.setItem('token', token);
-        navigate('/');
-    }
-
     return (
         <div className={styles.space}>
             <Card className={styles.loginView}>
@@ -45,7 +37,7 @@ const Registration = () => {
                     <FormField className={styles.marginTop10}>
                         <FormField.Label required>Вставьте ключ авторизации</FormField.Label>
                         <FormField.Content>
-                            <Input placeholder={'Ключ авторизации'} value={token} onChange={(e) => setToken((e.target as HTMLTextAreaElement).value)}/>
+                            <Input placeholder={'Ключ авторизации'} />
                             <FormField.Message className={styles.label}>Ключ авторизации можно получить в сервисе&nbsp;</FormField.Message>
                             <a className={styles.link} href={'https://pay.raif.ru/account/#/auth'}>Raif Pay</a>
                         </FormField.Content>
@@ -53,14 +45,14 @@ const Registration = () => {
                     <FormField className={styles.marginTop10}>
                         <FormField.Label>Вставьте ID чата в Telegram</FormField.Label>
                         <FormField.Content>
-                            <Input placeholder={'ID чата'} value={token} onChange={(e) => setToken((e.target as HTMLTextAreaElement).value)}/>
+                            <Input placeholder={'ID чата'}/>
                             <FormField.Message className={styles.label}>ID чата можно получить в нашем&nbsp;</FormField.Message>
                             <a className={styles.link} href={'/'}>Telegram-боте</a>
                         </FormField.Content>
                     </FormField>
                     <FormField className={styles.marginTop20}>
                         <FormField.Content>
-                            <Button onClick={handleLogin} design={'accent'}>Создать</Button>
+                            <Button design={'accent'}>Создать</Button>
                         </FormField.Content>
                     </FormField>
                     <Flex center className={styles.marginTop10}>

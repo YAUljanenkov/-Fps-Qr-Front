@@ -1,17 +1,9 @@
-import React, {useState} from "react";
+import React from "react";
 import {Button, Card, Flex, FormField, Input, InputPassword, Text} from "vienna-ui";
 import styles from './Login.module.css';
 import logo from '../../static/logo.jpg';
-import {useNavigate} from "react-router-dom";
 
 const Login = () => {
-    const [token, setToken] = useState('');
-    const navigate = useNavigate();
-    const handleLogin = () => {
-      localStorage.setItem('token', token);
-      navigate('/');
-    }
-
   return (
       <div className={styles.space}>
           <Card className={styles.loginView}>
@@ -28,11 +20,12 @@ const Login = () => {
                       <FormField.Label required>Введите пароль</FormField.Label>
                       <FormField.Content>
                           <InputPassword placeholder={'пароль'} />
+                          <FormField.Message><a className={styles.link} href={'/restore'}>Забыли пароль?</a></FormField.Message>
                       </FormField.Content>
                   </FormField>
                   <FormField className={styles.marginTop20}>
                       <FormField.Content>
-                          <Button onClick={handleLogin} design={'accent'}>Войти</Button>
+                          <Button design={'accent'}>Войти</Button>
                       </FormField.Content>
                   </FormField>
                   <Flex center className={styles.marginTop10}>
