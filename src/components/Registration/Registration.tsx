@@ -2,8 +2,11 @@ import React from "react";
 import {Button, Card, Flex, FormField, Input, InputPassword, Text} from "vienna-ui";
 import styles from './Registration.module.css';
 import logo from '../../static/logo.jpg';
+import {useNavigate} from "react-router-dom";
 
 const Registration = () => {
+    const navigate = useNavigate();
+
     return (
         <div className={styles.space}>
             <Card className={styles.loginView}>
@@ -57,7 +60,7 @@ const Registration = () => {
                     </FormField>
                     <Flex center className={styles.marginTop10}>
                         <Text size={'s'} color={'seattle100'}>Есть аккаунт?&nbsp;
-                            <a className={styles.link} href={'/login'}>Войти</a>
+                            <button className={styles.link} onClick={() => navigate('/login')}>Войти</button>
                         </Text>
                     </Flex>
                 </div>

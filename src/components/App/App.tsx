@@ -3,6 +3,7 @@ import React, {useEffect, useState} from "react";
 import logo from '../../static/logo.jpg';
 import styles from './App.module.css';
 import {Navigate, Outlet, useNavigate} from "react-router-dom";
+import {getCookie, removeCookie} from "typescript-cookie";
 
 const App = () => {
     const getCurrentLocation = () => {
@@ -28,7 +29,7 @@ const App = () => {
     }
 
     const handleLogout = () => {
-        localStorage.removeItem('token')
+        removeCookie('access_token')
         navigate('/login')
     }
 
@@ -38,8 +39,11 @@ const App = () => {
         }
     }, [path])
 
-    return (!localStorage.getItem('token') ? <Navigate to={'/login'}/> :
-            <>
+    if (!getCookie('access_token')) {
+        return <Navigate to="/login" replace />;
+    }
+
+    return (<>
                 <div style={{
                     position: 'fixed',
                     top: 0,

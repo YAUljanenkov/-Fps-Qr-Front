@@ -29,10 +29,15 @@
 }
 
 .link {
-    text-decoration: inherit;
+    text-decoration: none;
     font-family: inherit;
     color: royalblue;
     font-size: 12px;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    outline: inherit;
 }
 
 .label {
