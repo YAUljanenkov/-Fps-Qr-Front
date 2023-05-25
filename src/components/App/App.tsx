@@ -3,11 +3,15 @@ import React, {useEffect, useState} from "react";
 import logo from '../../static/logo.jpg';
 import styles from './App.module.css';
 import {Navigate, Outlet, useNavigate} from "react-router-dom";
+import {getCookie, removeCookie} from "typescript-cookie";
 
 const App = () => {
     const getCurrentLocation = () => {
         if (window.location.pathname.includes('/orders')) {
             return '/orders';
+        }
+        if (window.location.pathname.includes('/settings')) {
+            return '/settings';
         }
         return '/qrs';
     }
@@ -15,6 +19,7 @@ const App = () => {
     const items = [
         {value: '/qrs', label: 'Метки'},
         {value: '/orders', label: 'Платежи'},
+        {value: '/settings', label: 'Настройки'},
     ];
 
     const [path, setPath] = useState<string>(getCurrentLocation());
@@ -24,7 +29,7 @@ const App = () => {
     }
 
     const handleLogout = () => {
-        localStorage.removeItem('token')
+        removeCookie('access_token')
         navigate('/login')
     }
 
@@ -34,8 +39,11 @@ const App = () => {
         }
     }, [path])
 
-    return (!localStorage.getItem('token') ? <Navigate to={'/login'}/> :
-            <>
+    if (!getCookie('access_token')) {
+        return <Navigate to="/login" replace />;
+    }
+
+    return (<>
                 <div style={{
                     position: 'fixed',
                     top: 0,

@@ -20,7 +20,7 @@ const ReceiptsFinder = () => {
     const sendPhone = async () => {
         let receipts: Receipt[] = []
         try {
-            const orderResponse = await getOrders(0, null, phone)
+            const orderResponse = await getOrders(0, undefined, phone)
             const orders = orderResponse.data;
             for (const order of orders) {
                 if (order.receiptNumber) {
