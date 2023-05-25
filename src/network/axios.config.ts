@@ -1,7 +1,7 @@
 import { default as axiosLib } from 'axios';
 import { getCookie } from 'typescript-cookie'
 
-const axios = axiosLib.create({
+export const axios = axiosLib.create({
     baseURL: '/',
     timeout: 10000,
     headers: {
@@ -10,7 +10,16 @@ const axios = axiosLib.create({
     }
 });
 
-axios.interceptors.request.use((config) => {
+export const axiosProtected = axiosLib.create({
+    baseURL: '/',
+    timeout: 10000,
+    headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+    }
+});
+
+axiosProtected.interceptors.request.use((config) => {
     if(!getCookie('access_token')) {
         window.location.href = '/login';
     }
@@ -18,4 +27,4 @@ axios.interceptors.request.use((config) => {
     return config;
 });
 
-export default axios;
+
