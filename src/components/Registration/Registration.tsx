@@ -24,7 +24,7 @@ const Registration = () => {
         try {
             let intChatId: number | undefined = isNaN(parseInt(chatId))? undefined: parseInt(chatId);
             let accessToken = await (await register(login, password, merchantId, token, intChatId)).data;
-            setCookie('access_token', accessToken.access_token, {secure: true, expires: 1/24});
+            setCookie('access_token', accessToken.access_token, {expires: 1/24});
             navigate('/');
         } catch (e) {
             setIsOpen(true);

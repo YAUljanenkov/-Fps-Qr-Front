@@ -15,7 +15,7 @@ const Login = () => {
     const loginAction = async () => {
         try {
             let token = await (await loginRequest(login, password)).data;
-            setCookie('access_token', token.access_token, {secure: true, expires: 1/24});
+            setCookie('access_token', token.access_token, {expires: 1/24});
             navigate('/');
         } catch (e) {
             setIsOpen(true);

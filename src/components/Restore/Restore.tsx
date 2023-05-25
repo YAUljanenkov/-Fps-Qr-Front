@@ -16,7 +16,7 @@ const Restore = () => {
     const restoreAction = async () => {
         try {
             let accessToken = await (await restorePassword(token, password)).data;
-            setCookie('access_token', accessToken.access_token, {secure: true, expires: 1/24});
+            setCookie('access_token', accessToken.access_token, {expires: 1/24});
             navigate('/');
         } catch (e) {
             setIsOpen(true);
