@@ -13,6 +13,9 @@ import OrderIndex from "./components/Orders/OrderIndex/OrderIndex";
 import OrderView, {loader as orderLoader} from "./components/Orders/OrderView/OrderView";
 import ReceiptsFinder from "./components/ReceiptsFinder/ReceiptsFinder";
 import Login from "./components/Login/Login";
+import Registration from "./components/Registration/Registration";
+import Restore from "./components/Restore/Restore";
+import Settings from "./components/Settings/Settings";
 
 
 const router = createBrowserRouter([
@@ -59,7 +62,11 @@ const router = createBrowserRouter([
                         loader: orderLoader,
                     }
                 ]
-            }
+            },
+            {
+                path: '/settings',
+                element: <Settings/>
+            },
         ]
     },
     {
@@ -69,6 +76,14 @@ const router = createBrowserRouter([
     {
         path: '/login',
         element: <Login/>
+    },
+    {
+        path: '/register',
+        element: <Registration/>
+    },
+    {
+        path: '/restore',
+        element: <Restore/>
     }
 ]);
 

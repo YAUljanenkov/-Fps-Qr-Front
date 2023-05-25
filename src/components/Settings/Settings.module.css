@@ -1,0 +1,22 @@
+.wrapper {
+    padding: 20px;
+    margin: 50px;
+    width: calc(100% - 100px) !important;
+}
+
+.marginTop10 {
+    margin-top: 10px;
+    max-width: 300px;
+}
+
+.marginTop20 {
+    margin-top: 20px;
+    max-width: 300px;
+}
+
+.link {
+    text-decoration: inherit;
+    font-family: inherit;
+    color: royalblue;
+    font-size: 12px;
+}
